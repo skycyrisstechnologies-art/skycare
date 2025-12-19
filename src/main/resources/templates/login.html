@@ -1,169 +1,301 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Hospital Login</title>
+<meta charset="UTF-8">
+<title>Health Intelligence Platform</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: "Segoe UI", sans-serif;
-            background: linear-gradient(135deg, #0f9cbf, #004c70);
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-        }
+<style>
+:root{
+  --sky:#cfefff;
+  --light:#8fd3ff;
+  --mid:#3f93c7;
+  --deep:#1f4f73;
+  --brand:#0f5299;
+}
 
-        /* animated glowing circles */
-        .circle {
-            position: absolute;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.1);
-            filter: blur(40px);
-            animation: float 6s infinite alternate ease-in-out;
-        }
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:"Inter","Segoe UI",system-ui,sans-serif;
+}
 
-        .c1 { width: 250px; height: 250px; top: 10%; left: 10%; }
-        .c2 { width: 300px; height: 300px; bottom: 15%; right: 12%; }
+body{
+  height:100vh;
+  background:
+    radial-gradient(circle at 50% 38%,
+      #ffffff 0%,
+      var(--sky) 25%,
+      var(--light) 45%,
+      var(--mid) 70%,
+      var(--deep) 100%);
+  overflow:hidden;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
 
-        @keyframes float {
-            from { transform: translateY(0px); }
-            to   { transform: translateY(40px); }
-        }
+/* CANVAS LAYERS */
+canvas{
+  position:absolute;
+  inset:0;
+}
 
-        .card {
-            width: 380px;
-            padding: 40px;
-            border-radius: 18px;
-            background: rgba(255, 255, 255, 0.15);
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(14px);
-            -webkit-backdrop-filter: blur(14px);
-            color: #ffffff;
-            text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            animation: popUp 0.7s ease-out;
-        }
+/* LOGIN CARD */
+.login{
+  position:relative;
+  z-index:10;
+  width:420px;
+  padding:36px 50px;
+  border-radius:28px;
+  background:
+    linear-gradient(180deg,
+      rgba(255,255,255,0.46),
+      rgba(255,255,255,0.026));
+  backdrop-filter: blur(30px);
+  box-shadow:
+    0 60px 140px rgba(31,79,115,0.42),
+    inset 0 0 0 1px rgba(255,255,255,0.30);
+  text-align:center;
+}
 
-        @keyframes popUp {
-            from { transform: scale(0.9); opacity: 0; }
-            to   { transform: scale(1); opacity: 1; }
-        }
+/* ✨ BRAND NAME ✨ */
+.brand{
+  font-family: "Brush Script MT","Segoe Script","Lucida Handwriting",cursive;
+  font-size:48px;
+  font-weight:600;
+  letter-spacing:1px;
+  color:#0f5299;
+  margin-bottom:8px;
+  text-shadow:0 6px 18px rgba(15,82,153,0.35);
+}
 
-        .logo {
-            width: 70px;
-            margin-bottom: 10px;
-            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
-        }
+/* TITLE */
+.login h2{
+  font-size:32px;
+  font-weight:700;
+  color:#0b2a3d;
+}
 
-        h2 {
-            margin-bottom: 20px;
-            font-size: 26px;
-            font-weight: 700;
-            letter-spacing: .5px;
-        }
+/* SUBTITLE */
+.subtitle{
+  font-size:15px;
+  color:#355e78;
+  margin-top:12px;
+  margin-bottom:24px;
+}
 
-        .input-group {
-            margin-bottom: 18px;
-            text-align: left;
-        }
+/* INPUTS */
+.login input{
+  width:100%;
+  padding:16px;
+  margin:14px 0;
+  border-radius:14px;
+  border:none;
+  background:white;
+  font-size:15px;
+  box-shadow:0 6px 16px rgba(0,0,0,0.12);
+}
 
-        label {
-            font-size: 14px;
-            opacity: 0.85;
-        }
+.login input:focus{
+  outline:none;
+  box-shadow:0 0 0 2px rgba(63,147,199,0.45);
+}
 
-        input {
-            width: 100%;
-            padding: 12px;
-            margin-top: 6px;
-            border-radius: 10px;
-            border: none;
-            outline: none;
-            background: rgba(255, 255, 255, 0.25);
-            color: #fff;
-            font-size: 15px;
-        }
+/* BUTTON */
+.login button{
+  width:100%;
+  padding:17px;
+  margin-top:26px;
+  border:none;
+  border-radius:18px;
+  background:linear-gradient(135deg,#5fd4ff,#2b6fa3);
+  color:white;
+  font-size:17px;
+  font-weight:700;
+  cursor:pointer;
+  box-shadow:0 22px 46px rgba(47,111,163,0.55);
+}
 
-        input::placeholder {
-            color: rgba(255, 255, 255, 0.7);
-        }
+.login button:hover{
+  transform:translateY(-2px);
+}
 
-        button {
-            width: 100%;
-            padding: 12px;
-            margin-top: 10px;
-            background: linear-gradient(90deg, #22d3ee, #0ea5e9);
-            border: none;
-            border-radius: 10px;
-            font-size: 17px;
-            color: white;
-            cursor: pointer;
-            transition: 0.3s;
-            font-weight: bold;
-            box-shadow: 0 6px 14px rgba(14, 165, 233, 0.4);
-        }
+/* ERROR */
+.error{
+  margin-top:14px;
+  color:#d9534f;
+  font-size:14px;
+  font-weight:600;
+}
 
-        button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(14, 165, 233, 0.6);
-        }
-
-        .error {
-            margin-top: 12px;
-            color: #ff6b6b;
-            font-size: 14px;
-            font-weight: bold;
-        }
-
-        /* Add bottom hospital tagline */
-        .tag {
-            margin-top: 15px;
-            font-size: 13px;
-            opacity: 0.8;
-        }
-
-    </style>
+/* FOOTER */
+.footer-text{
+  margin-top:28px;
+  font-size:13px;
+  color:#5a7f95;
+  opacity:0.85;
+}
+</style>
 </head>
 
 <body>
 
-    <!-- glowing circle background -->
-    <div class="circle c1"></div>
-    <div class="circle c2"></div>
+<canvas id="dna"></canvas>
+<canvas id="network"></canvas>
+<canvas id="icons"></canvas>
 
-    <div class="card">
+<div class="login">
 
-        <!-- hospital logo -->
-        <img class="logo" src="https://cdn-icons-png.flaticon.com/512/1488/1488589.png" alt="Hospital Logo">
+  <!-- ✨ NEW BRAND TEXT ✨ -->
+  <div class="brand">SkyCare</div>
 
-        <h2>Hospital Login</h2>
+  <h2>LOGIN</h2>
+  <p class="subtitle">Welcome back, Please login.</p>
 
-        <form th:action="@{/login}" method="post">
+  <form th:action="@{/login}" method="post">
+    <input type="hidden"
+           th:name="${_csrf.parameterName}"
+           th:value="${_csrf.token}" />
 
-            <div class="input-group">
-                <label>Username</label>
-                <input type="text" name="username" placeholder="Enter your username" />
-            </div>
+    <input type="text" name="username" placeholder="Username" required />
+    <input type="password" name="password" placeholder="Password" required />
 
-            <div class="input-group">
-                <label>Password</label>
-                <input type="password" name="password" placeholder="Enter your password" />
-            </div>
+    <button type="submit">Login</button>
 
-            <button type="submit">Login</button>
-
-            <div th:if="${param.error}" class="error">
-                Invalid username or password
-            </div>
-
-        </form>
-
-        <div class="tag">© 2025 Built by Skycyriss</div>
-
+    <div th:if="${param.error}" class="error">
+      Invalid username or password
     </div>
+  </form>
+
+  <div class="footer-text">© Powered by SkyCyriss</div>
+</div>
+
+<script>
+/* DNA HELIX */
+const dna=document.getElementById("dna");
+const d=dna.getContext("2d");
+dna.width=innerWidth; dna.height=innerHeight;
+let t=0;
+
+function drawDNA(){
+  d.clearRect(0,0,dna.width,dna.height);
+  const cx=dna.width/2, cy=dna.height/2, r=160;
+
+  for(let y=-dna.height/2;y<dna.height/2;y+=10){
+    const a=t+y*0.03;
+    const x=Math.sin(a)*r;
+    const z=(Math.cos(a)+1)/2;
+
+    d.strokeStyle=`rgba(143,211,255,${0.18+z*0.35})`;
+    d.lineWidth=2+z*3;
+    d.beginPath();
+    d.moveTo(cx-x,cy+y);
+    d.lineTo(cx+x,cy+y);
+    d.stroke();
+
+    d.beginPath();
+    d.arc(cx+x,cy+y,4+z*4,0,Math.PI*2);
+    d.fillStyle=`rgba(15,82,153,${0.55+z*0.35})`;
+    d.fill();
+  }
+  t+=0.015;
+  requestAnimationFrame(drawDNA);
+}
+drawDNA();
+
+/* NETWORK */
+const net=document.getElementById("network");
+const n=net.getContext("2d");
+net.width=innerWidth; net.height=innerHeight;
+
+const nodes=[...Array(100)].map(()=>( {
+  x:Math.random()*net.width,
+  y:Math.random()*net.height,
+  vx:(Math.random()-0.5)*0.25,
+  vy:(Math.random()-0.5)*0.25
+}));
+
+function drawNetwork(){
+  n.clearRect(0,0,net.width,net.height);
+  for(let i=0;i<nodes.length;i++){
+    const a=nodes[i];
+    a.x+=a.vx; a.y+=a.vy;
+    if(a.x<0||a.x>net.width) a.vx*=-1;
+    if(a.y<0||a.y>net.height) a.vy*=-1;
+
+    for(let j=i+1;j<nodes.length;j++){
+      const b=nodes[j];
+      const dist=Math.hypot(a.x-b.x,a.y-b.y);
+      if(dist<160){
+        n.strokeStyle=`rgba(15,82,153,${0.6-dist/160})`;
+        n.lineWidth=0.6;
+        n.beginPath();
+        n.moveTo(a.x,a.y);
+        n.lineTo(b.x,b.y);
+        n.stroke();
+      }
+    }
+  }
+  requestAnimationFrame(drawNetwork);
+}
+drawNetwork();
+
+/* MEDICAL ICONS */
+const icon=document.getElementById("icons");
+const ic=icon.getContext("2d");
+icon.width=innerWidth; icon.height=innerHeight;
+
+const items=[...Array(28)].map(()=>( {
+  x:Math.random()*icon.width,
+  y:Math.random()*icon.height,
+  s:Math.random()*18+22,
+  v:Math.random()*0.18+0.08,
+  type:Math.floor(Math.random()*2)
+}));
+
+function drawMedicalCross(x,y,s){
+  ic.fillStyle="rgba(15,82,153,0.32)";
+  ic.fillRect(x-s/2,y-s/6,s,s/3);
+  ic.fillRect(x-s/6,y-s/2,s/3,s);
+}
+
+function drawMedicalHeart(x,y,s){
+  const size=s*1.45;
+  ic.fillStyle="rgba(15,82,153,0.32)";
+  ic.beginPath();
+  ic.moveTo(x,y+size*0.55);
+  ic.bezierCurveTo(x-size,y+size*0.1,x-size*0.7,y-size,x,y-size*0.35);
+  ic.bezierCurveTo(x+size*0.7,y-size,x+size,y+size*0.1,x,y+size*0.55);
+  ic.closePath();
+  ic.fill();
+
+  ic.fillStyle="rgba(255,255,255,0.85)";
+  const p=size*0.28;
+  ic.fillRect(x-p/6,y-p/2,p/3,p);
+  ic.fillRect(x-p/2,y-p/6,p,p/3);
+}
+
+function drawIcons(){
+  ic.clearRect(0,0,icon.width,icon.height);
+  items.forEach(o=>{
+    o.y-=o.v;
+    if(o.y<-60) o.y=icon.height+60;
+    o.type===0
+      ? drawMedicalCross(o.x,o.y,o.s)
+      : drawMedicalHeart(o.x,o.y,o.s/2);
+  });
+  requestAnimationFrame(drawIcons);
+}
+drawIcons();
+
+/* RESIZE */
+onresize=()=>{
+  dna.width=network.width=icon.width=innerWidth;
+  dna.height=network.height=icon.height=innerHeight;
+};
+</script>
 
 </body>
 </html>

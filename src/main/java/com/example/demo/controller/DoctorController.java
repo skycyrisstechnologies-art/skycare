@@ -14,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Controller
@@ -39,12 +40,14 @@ public class DoctorController {
         long todayAppointments = doctorService.countTodayAppointments(doctorCode);
         long pendingReports = testRequestService.countPendingReports(doctorCode);
 
+        List<Patient> patients =
+                patientService.getPatientsByDoctorCode(doctorCode);
+
         model.addAttribute("doctorName", doctorService.getLoggedInDoctorName());
         model.addAttribute("patientCount", patientCount);
         model.addAttribute("appointmentCount", todayAppointments);
         model.addAttribute("pendingReports", pendingReports);
-
-        model.addAttribute("appointments", doctorService.getTodayAppointments(doctorCode));
+        model.addAttribute("patients", patients);
 
         return "doctor-dashboard";
     }
@@ -57,7 +60,9 @@ public class DoctorController {
 
         String doctorCode = doctorService.getDoctorCodeForLoggedIn();
 
-        List<Patient> patients = patientService.getPatientsByDoctorCode(doctorCode);
+        List<Patient> patients =
+                patientService.getPatientsByDoctorCode(doctorCode);
+
         model.addAttribute("patients", patients);
 
         return "doctor-patients";
@@ -75,10 +80,14 @@ public class DoctorController {
         }
 
         model.addAttribute("patient", patient);
-        model.addAttribute("notes", visitNoteService.getNotesByPatient(id));
-        model.addAttribute("prescriptions", prescriptionService.getPrescriptionsByPatient(id));
-        model.addAttribute("tests", testRequestService.getTestsByPatient(id));
-        model.addAttribute("completedReports", testRequestService.getCompletedReports(id));
+        model.addAttribute("notes",
+                visitNoteService.getNotesByPatient(id));
+        model.addAttribute("prescriptions",
+                prescriptionService.getPrescriptionsByPatient(id));
+        model.addAttribute("tests",
+                testRequestService.getTestsByPatient(id));
+        model.addAttribute("completedReports",
+                testRequestService.getCompletedReports(id));
 
         return "doctor-patient-details";
     }
@@ -88,12 +97,13 @@ public class DoctorController {
     // =======================
     @PostMapping("/patient/{id}/notes")
     public String addNote(@PathVariable Long id,
-                          @RequestParam String note) {
+                          @RequestParam("note") String note) {
 
         VisitNote vn = new VisitNote();
         vn.setPatientId(id);
         vn.setNote(note);
         vn.setDoctorCode(doctorService.getDoctorCodeForLoggedIn());
+        vn.setCreatedAt(LocalDateTime.now());
 
         visitNoteService.saveNote(vn);
 
@@ -105,14 +115,15 @@ public class DoctorController {
     // =======================
     @PostMapping("/patient/{id}/prescriptions")
     public String addPrescription(@PathVariable Long id,
-                                  @RequestParam String medicine,
-                                  @RequestParam String dosage) {
+                                  @RequestParam("medicine") String medicine,
+                                  @RequestParam("dosage") String dosage) {
 
         Prescription p = new Prescription();
         p.setPatientId(id);
         p.setMedicine(medicine);
         p.setDosage(dosage);
         p.setDoctorCode(doctorService.getDoctorCodeForLoggedIn());
+        p.setCreatedAt(LocalDateTime.now());
 
         prescriptionService.savePrescription(p);
 
@@ -124,13 +135,14 @@ public class DoctorController {
     // =======================
     @PostMapping("/patient/{id}/tests")
     public String requestTest(@PathVariable Long id,
-                              @RequestParam String testName) {
+                              @RequestParam("testName") String testName) {
 
         TestRequest tr = new TestRequest();
         tr.setPatientId(id);
         tr.setTestName(testName);
         tr.setStatus("PENDING");
         tr.setDoctorCode(doctorService.getDoctorCodeForLoggedIn());
+        tr.setRequestedAt(LocalDateTime.now());
 
         testRequestService.saveTestRequest(tr);
 

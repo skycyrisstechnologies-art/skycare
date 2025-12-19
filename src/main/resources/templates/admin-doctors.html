@@ -1,80 +1,271 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Manage Doctors</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<meta charset="UTF-8">
+<title>Manage Doctors</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
-    <style>
-        body { background: #f4f6f9; }
-        .content { padding: 30px; margin-left: 260px; }
-        .table { background: white; }
-        .sidebar { 
-            width: 250px; height: 100vh; background: #0d6efd;
-            color: white; padding: 20px; position: fixed; 
-        }
-        .sidebar a {
-            color: white; padding: 10px; display: block; 
-            border-radius: 6px; text-decoration: none;
-        }
-        .sidebar a:hover { background: rgba(255,255,255,0.2); }
-    </style>
+<style>
+:root{
+  /* Dark logo blue */
+  --nav-dark:#0b3f8f;
+  --nav-deep:#072f66;
+
+  /* Light glass blue */
+  --glass-blue:#bfe6ff;
+  --glass-blue-soft:#e8f6ff;
+
+  --bg1:#f7fbff;
+  --bg2:#d6ecfb;
+  --bg3:#a8d6f5;
+
+  --ink:#0a2540;
+  --stroke:rgba(255,255,255,0.45);
+}
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:Inter,Segoe UI,system-ui,sans-serif;
+}
+
+body{
+  min-height:100vh;
+  background:
+    radial-gradient(circle at 50% 35%,
+      #ffffff 0%,
+      var(--bg1) 30%,
+      var(--bg2) 55%,
+      var(--bg3) 100%);
+  overflow-x:hidden;
+  color:var(--ink);
+}
+
+/* BACKGROUND DOTS */
+#ambient{
+  position:fixed;
+  inset:0;
+  z-index:0;
+  pointer-events:none;
+}
+
+/* SIDEBAR */
+.sidebar{
+  position:fixed;
+  top:30px;
+  left:30px;
+  bottom:30px;
+  width:280px;
+  background:linear-gradient(180deg,var(--nav-dark),var(--nav-deep));
+  border-radius:28px;
+  padding:36px 26px;
+  color:white;
+  z-index:5;
+}
+
+.sidebar h2{
+  text-align:center;
+  margin-bottom:40px;
+}
+
+.sidebar a{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:14px 18px;
+  margin-bottom:12px;
+  border-radius:14px;
+  color:#d9ecff;
+  text-decoration:none;
+}
+
+.sidebar a.active,
+.sidebar a:hover{
+  background:rgba(255,255,255,.18);
+}
+
+/* MAIN CONTENT */
+.content{
+  margin-left:360px;
+  padding:50px 60px;
+  position:relative;
+  z-index:5;
+}
+
+h1{
+  font-size:40px;
+}
+
+.sub{
+  color:#4e7aa0;
+  margin-bottom:30px;
+}
+
+/* TOP BAR */
+.top-bar{
+  display:flex;
+  justify-content:flex-end;
+  margin-bottom:20px;
+}
+
+.add-btn{
+  background:linear-gradient(135deg,#6fd3ff,#3b82c4);
+  padding:12px 24px;
+  border-radius:16px;
+  color:white;
+  text-decoration:none;
+  font-weight:600;
+}
+
+/* PANEL */
+.panel{
+  background:rgba(255,255,255,.65);
+  backdrop-filter:blur(24px);
+  border-radius:30px;
+  padding:26px;
+}
+
+/* GRID */
+.grid-head,
+.row-card{
+  display:grid;
+  grid-template-columns:
+    0.9fr   /* Code */
+    1fr     /* Name */
+    1.4fr   /* Specialization */
+    1.2fr   /* Wing */
+    0.9fr   /* Status */
+    1.2fr   /* Phone */
+    1.6fr   /* Email */
+    1fr;    /* Actions */
+  align-items:center;
+  column-gap:12px;
+}
+
+.grid-head{
+  padding:0 12px 12px;
+  font-weight:600;
+  color:#5c7fa1;
+}
+
+.row-card{
+  background:white;
+  padding:16px 12px;
+  border-radius:20px;
+  margin-bottom:16px;
+  box-shadow:0 14px 30px rgba(0,0,0,.1);
+}
+
+/* ACTION BUTTONS */
+.actions{
+  display:flex;
+  gap:10px;
+}
+
+.edit{
+  background:#4aa8ff;
+  color:white;
+  padding:8px 14px;
+  border-radius:12px;
+  text-decoration:none;
+  font-size:14px;
+}
+
+.delete{
+  background:#ff6b6b;
+  color:white;
+  padding:8px 14px;
+  border-radius:12px;
+  text-decoration:none;
+  font-size:14px;
+}
+</style>
 </head>
 
 <body>
 
+<canvas id="ambient"></canvas>
+
+<!-- SIDEBAR -->
 <div class="sidebar">
-    <h3 class="text-center">Admin Portal</h3>
-
-    <a th:href="@{/admin/dashboard}">🏠 Dashboard</a>
-    <a th:href="@{/admin/doctors}">🧑‍⚕️ Manage Doctors</a>
-    <a th:href="@{/admin/staff}">👨‍💼 Manage Staff</a>
-    <a th:href="@{/admin/patients}">🧍 Patients</a>
-    <a th:href="@{/admin/billing}">💳 Billing</a>
-    <a th:href="@{/admin/analytics}">📊 Analytics</a>
-    <a th:href="@{/logout}">🚪 Logout</a>
+  <h2>Admin Portal</h2>
+  <a th:href="@{/admin/dashboard}">🏠 Dashboard</a>
+  <a class="active">🧑‍⚕️ Manage Doctors</a>
+  <a th:href="@{/admin/staff}">👨‍💼 Manage Staff</a>
+  <a th:href="@{/admin/patients}">🧍 Patients</a>
+  <a th:href="@{/admin/billing}">💳 Billing</a>
+  <a th:href="@{/admin/analytics}">📊 Analytics</a>
+  <a th:href="@{/logout}">🚪 Logout</a>
 </div>
 
+<!-- CONTENT -->
 <div class="content">
+  <h1>Manage Doctors</h1>
+  <div class="sub">Doctor registry & access control</div>
 
-    <h2 class="mb-4">Doctors List</h2>
+  <div class="top-bar">
+    <a class="add-btn" th:href="@{/admin/doctors/add}">+ Add Doctor</a>
+  </div>
 
-    <a class="btn btn-success mb-3" th:href="@{/admin/doctors/add}">+ Add Doctor</a>
+  <div class="panel">
 
-    <table class="table table-bordered table-striped shadow-sm">
-        <thead class="table-primary">
-            <tr>
-                <th>Code</th>
-                <th>Name</th>
-                <th>Specialization</th>
-                <th>Wing</th>
-                <th>Status</th>
-                <th>Phone</th>
-                <th>Email</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
+    <div class="grid-head">
+      <div>Code</div>
+      <div>Name</div>
+      <div>Specialization</div>
+      <div>Wing</div>
+      <div>Status</div>
+      <div>Phone</div>
+      <div>Email</div>
+      <div>Actions</div>
+    </div>
 
-        <tbody>
-            <tr th:each="d : ${doctors}">
-                <td th:text="${d.doctorCode}"></td>
-                <td th:text="${d.name}"></td>
-                <td th:text="${d.specialization}"></td>
-                <td th:text="${d.wing}"></td>
-                <td th:text="${d.status}"></td>
-                <td th:text="${d.phone}"></td>
-                <td th:text="${d.email}"></td>
+    <div class="row-card" th:each="d : ${doctors}">
+      <div th:text="${d.doctorCode}">DOC-002</div>
+      <div th:text="${d.name}">Ajay</div>
+      <div th:text="${d.specialization}">AIMS, Delhi</div>
+      <div th:text="${d.wing}">Cardiology</div>
+      <div th:text="${d.status}">ACTIVE</div>
+      <div th:text="${d.phone}">1234567890</div>
+      <div th:text="${d.email}">ajay@gmail.com</div>
+      <div class="actions">
+        <a class="edit" th:href="@{'/admin/doctors/edit/' + ${d.id}}">Edit</a>
+        <a class="delete"
+           th:href="@{'/admin/doctors/delete/' + ${d.id}}"
+           onclick="return confirm('Are you sure?')">Delete</a>
+      </div>
+    </div>
 
-                <td>
-                    <a th:href="@{'/admin/doctors/edit/' + ${d.id}}" class="btn btn-sm btn-primary">Edit</a>
-                    <a th:href="@{'/admin/doctors/delete/' + ${d.id}}"
-                       onclick="return confirm('Are you sure?')"
-                       class="btn btn-sm btn-danger">Delete</a>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+  </div>
 </div>
+
+<!-- DOT ANIMATION -->
+<script>
+const c=document.getElementById("ambient"),ctx=c.getContext("2d");
+function resize(){c.width=innerWidth;c.height=innerHeight}
+resize();onresize=resize;
+
+const dots=[...Array(140)].map(()=>({
+  x:Math.random()*c.width,
+  y:Math.random()*c.height,
+  r:Math.random()*2+1,
+  v:Math.random()*0.35+0.15
+}));
+
+(function animate(){
+  ctx.clearRect(0,0,c.width,c.height);
+  dots.forEach(d=>{
+    d.y-=d.v;
+    if(d.y<0)d.y=c.height;
+    ctx.beginPath();
+    ctx.arc(d.x,d.y,d.r,0,Math.PI*2);
+    ctx.fillStyle="rgba(143,211,255,0.35)";
+    ctx.fill();
+  });
+  requestAnimationFrame(animate);
+})();
+</script>
 
 </body>
 </html>

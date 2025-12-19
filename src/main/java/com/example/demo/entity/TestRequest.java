@@ -2,6 +2,7 @@ package com.example.demo.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "test_requests")
@@ -19,4 +20,7 @@ public class TestRequest {
     private String testName;
     private String status;
     private String doctorCode;
+
+    // ✅ ADD THIS
+    private LocalDateTime requestedAt;
 }

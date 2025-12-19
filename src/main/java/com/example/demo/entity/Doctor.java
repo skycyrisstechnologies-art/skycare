@@ -5,32 +5,27 @@ import lombok.*;
 
 @Entity
 @Table(name = "doctors")
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
+@Getter @Setter
 public class Doctor {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
+    @Column(unique = true)
     private String doctorCode;
 
-    @Column(nullable = false)
-    private String name;
+    @Column(unique = true, nullable = false)
+    private String username;   // 🔥 NEW
 
+    private String name;
     private String specialization;
     private String wing;
+    private String phone;
+    private String email;
 
     @Enumerated(EnumType.STRING)
     private Status status = Status.ACTIVE;
 
-    private String phone;
-    private String email;
-
-    public enum Status {
-        ACTIVE, INACTIVE
-    }
+    public enum Status { ACTIVE, INACTIVE }
 }

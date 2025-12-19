@@ -2,93 +2,126 @@ package com.example.demo.service;
 
 import com.example.demo.entity.Doctor;
 import com.example.demo.entity.Patient;
+import com.example.demo.entity.Role;
+import com.example.demo.entity.User;
 import com.example.demo.repository.DoctorRepository;
 import com.example.demo.repository.PatientRepository;
+import com.example.demo.repository.RoleRepository;
+import com.example.demo.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
 public class DoctorService {
 
-    private final DoctorRepository doctorRepository;
-    private final PatientRepository patientRepository;
+    private final DoctorRepository doctorRepo;
+    private final PatientRepository patientRepo;
+    private final UserRepository userRepo;
+    private final RoleRepository roleRepo;
+    private final PasswordEncoder passwordEncoder;
 
-    // ----------------------------------------------------
+    // =====================================================
+    // CREATE / UPDATE DOCTOR (ADMIN)
+    // =====================================================
+    public Doctor saveDoctor(Doctor doctor) {
+
+        // Generate doctorCode ONLY for new doctor
+        if (doctor.getId() == null) {
+            long next = doctorRepo.count() + 1;
+            doctor.setDoctorCode("DOC-" + String.format("%03d", next));
+        } else {
+            // Preserve existing doctorCode during update
+            Doctor existing = doctorRepo.findById(doctor.getId())
+                    .orElseThrow(() -> new RuntimeException("Doctor not found"));
+            doctor.setDoctorCode(existing.getDoctorCode());
+        }
+
+        // Username is always email
+        doctor.setUsername(doctor.getEmail());
+
+        // Auto-create USER login if not exists
+        userRepo.findByUsername(doctor.getUsername())
+                .orElseGet(() -> {
+                    Role doctorRole = roleRepo.findByName("DOCTOR")
+                            .orElseThrow(() -> new RuntimeException("DOCTOR role not found"));
+
+                    User user = new User();
+                    user.setUsername(doctor.getUsername());
+                    user.setPassword(passwordEncoder.encode("doc@123")); // default password
+                    user.setEnabled(true);
+                    user.setRoles(Set.of(doctorRole));
+
+                    return userRepo.save(user);
+                });
+
+        return doctorRepo.save(doctor);
+    }
+
+    // =====================================================
     // BASIC CRUD
-    // ----------------------------------------------------
-
+    // =====================================================
     public List<Doctor> getAllDoctors() {
-        return doctorRepository.findAll();
+        return doctorRepo.findAll();
     }
 
     public Doctor getDoctor(Long id) {
-        return doctorRepository.findById(id).orElse(null);
-    }
-
-    public Doctor saveDoctor(Doctor doctor) {
-        if (doctor.getDoctorCode() == null || doctor.getDoctorCode().isEmpty()) {
-            long nextId = doctorRepository.count() + 1;
-            doctor.setDoctorCode("DOC-" + String.format("%03d", nextId));
-        }
-        return doctorRepository.save(doctor);
+        return doctorRepo.findById(id).orElse(null);
     }
 
     public void deleteDoctor(Long id) {
-        doctorRepository.deleteById(id);
+        doctorRepo.deleteById(id);
     }
 
-    // ----------------------------------------------------
-    // AUTH-BASED DOCTOR HELPERS
-    // ----------------------------------------------------
-
-    // Get logged-in Doctor object
+    // =====================================================
+    // LOGGED-IN DOCTOR HELPERS
+    // =====================================================
     public Doctor getLoggedInDoctor() {
         String username = SecurityContextHolder.getContext()
                 .getAuthentication()
                 .getName();
 
-        return doctorRepository.findByEmail(username);
+        return doctorRepo.findByUsername(username);
     }
 
-    // Return doctorCode of logged-in doctor
     public String getDoctorCodeForLoggedIn() {
-        Doctor d = getLoggedInDoctor();
-        return (d != null) ? d.getDoctorCode() : null;
+        Doctor doctor = getLoggedInDoctor();
+        return doctor != null ? doctor.getDoctorCode() : null;
     }
 
-    // Return name of logged-in doctor
     public String getLoggedInDoctorName() {
-        Doctor d = getLoggedInDoctor();
-        return (d != null) ? d.getName() : "Doctor";
+        Doctor doctor = getLoggedInDoctor();
+        return doctor != null ? doctor.getName() : "Doctor";
     }
 
-    // ----------------------------------------------------
-    // DASHBOARD COUNTS (Placeholders until Appointment entity exists)
-    // ----------------------------------------------------
+    // =====================================================
+    // PATIENT OPERATIONS (Doctor-wise)
+    // =====================================================
+    public List<Patient> getPatientsForLoggedInDoctor() {
+        String doctorCode = getDoctorCodeForLoggedIn();
+        return patientRepo.findByAssignedDoctorCode(doctorCode);
+    }
 
+    public long countPatientsForLoggedInDoctor() {
+        String doctorCode = getDoctorCodeForLoggedIn();
+        return patientRepo.countByAssignedDoctorCode(doctorCode);
+    }
+
+    // =====================================================
+    // DASHBOARD PLACEHOLDERS (REQUIRED BY DoctorController)
+    // =====================================================
     public long countTodayAppointments(String doctorCode) {
-        // You can implement later when Appointment table exists
+        // Appointment module not implemented yet
         return 0;
     }
 
     public List<?> getTodayAppointments(String doctorCode) {
-        // Placeholder list until Appointment entity is created
+        // Appointment module not implemented yet
         return List.of();
-    }
-
-    // ----------------------------------------------------
-    // PATIENT OPERATIONS (doctorCode-based)
-    // ----------------------------------------------------
-
-    public List<Patient> getPatientsByDoctorCode(String doctorCode) {
-        return patientRepository.findByAssignedDoctorCode(doctorCode);
-    }
-
-    public long countPatientsByDoctorCode(String doctorCode) {
-        return patientRepository.countByAssignedDoctorCode(doctorCode);
     }
 }

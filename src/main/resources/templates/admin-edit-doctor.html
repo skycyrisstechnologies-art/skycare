@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
-<title>Add Doctor</title>
+<title>Edit Doctor</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -26,6 +26,7 @@
   --stroke:rgba(255,255,255,0.45);
 }
 
+
 /* ============ RESET ============ */
 *{
   margin:0;
@@ -45,6 +46,7 @@ body{
   overflow-x:hidden;
   color:var(--ink);
 }
+
 /* ============ BACKGROUND DOTS ============ */
 #ambient{
   position:fixed;
@@ -102,6 +104,7 @@ body{
 .form-card{
   max-width:760px;
   margin:auto;
+
   padding:46px;
   border-radius:34px;
 
@@ -195,14 +198,16 @@ body{
 
   <div class="form-card">
 
-    <h2>Add Doctor</h2>
-    <div class="subtitle">Register a new doctor & assign access</div>
+    <h2>Edit Doctor</h2>
+    <div class="subtitle">Update doctor profile & access information</div>
 
-    <form th:action="@{/admin/doctors/add}"
+    <form th:action="@{'/admin/doctors/update/' + ${doctor.id}}"
           th:object="${doctor}" method="post">
 
-      <div class="row g-4">
+      <input type="hidden" th:field="*{id}">
+      <input type="hidden" th:field="*{doctorCode}">
 
+      <div class="row g-4">
         <div class="col-md-6">
           <label class="form-label">Name</label>
           <input th:field="*{name}" class="form-control" required>
@@ -235,11 +240,10 @@ body{
           <label class="form-label">Email</label>
           <input th:field="*{email}" class="form-control">
         </div>
-
       </div>
 
       <div class="actions">
-        <button class="btn-save">Save Doctor</button>
+        <button class="btn-save">Update Doctor</button>
         <a th:href="@{/admin/doctors}" class="btn-cancel">Cancel</a>
       </div>
 

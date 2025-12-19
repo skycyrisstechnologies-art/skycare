@@ -1,115 +1,278 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Admin Dashboard</title>
+<meta charset="UTF-8">
+<title>Admin Dashboard</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <style>
-        body { background-color: #f4f6f9; }
+<style>
+/* ================= BRAND COLORS (FROM LOGO) ================= */
+:root{
+  /* Dark logo blue */
+  --nav-dark:#0b3f8f;
+  --nav-deep:#072f66;
 
-        .sidebar {
-            width: 250px;
-            height: 100vh;
-            position: fixed;
-            background: #0d6efd;
-            padding: 20px;
-            color: white;
-        }
+  /* Light glass blue */
+  --glass-blue:#bfe6ff;
+  --glass-blue-soft:#e8f6ff;
 
-        .sidebar h3 {
-            text-align: center;
-            margin-bottom: 25px;
-        }
+  --bg1:#f7fbff;
+  --bg2:#d6ecfb;
+  --bg3:#a8d6f5;
 
-        .sidebar a {
-            display: block;
-            padding: 12px;
-            color: white;
-            text-decoration: none;
-            border-radius: 8px;
-            margin-bottom: 10px;
-        }
+  --ink:#0a2540;
+  --stroke:rgba(255,255,255,0.45);
+}
 
-        .sidebar a:hover {
-            background: rgba(255,255,255,0.2);
-        }
+/* ================= RESET ================= */
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:"Inter","Segoe UI",system-ui,sans-serif;
+}
 
-        .content {
-            margin-left: 270px;
-            padding: 25px;
-        }
+body{
+  min-height:100vh;
+  background:
+    radial-gradient(circle at 50% 35%,
+      #ffffff 0%,
+      var(--bg1) 30%,
+      var(--bg2) 55%,
+      var(--bg3) 100%);
+  overflow-x:hidden;
+  color:var(--ink);
+}
 
-        .stat-card {
-            background: white;
-            border-radius: 12px;
-            padding: 25px;
-            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
-        }
-    </style>
+/* ================= AMBIENT CANVAS ================= */
+#ambient{
+  position:fixed;
+  inset:0;
+  z-index:0;
+  pointer-events:none;
+}
+
+/* ================= SIDEBAR ================= */
+.sidebar{
+  position:fixed;
+  top:30px;
+  left:30px;
+  bottom:30px;
+  width:280px;
+  z-index:5;
+
+  background:
+    linear-gradient(180deg,
+      var(--nav-dark),
+      var(--nav-deep));
+
+  border-radius:28px;
+  box-shadow:0 70px 160px rgba(7,47,102,0.6);
+  padding:36px 26px;
+  color:white;
+}
+
+.sidebar h3{
+  font-size:22px;
+  font-weight:700;
+  margin-bottom:45px;
+  text-align:center;
+}
+
+.sidebar a{
+  display:block;
+  text-decoration:none;
+  color:#d8ebff;
+  padding:16px 20px;
+  border-radius:16px;
+  margin-bottom:12px;
+  transition:0.35s;
+}
+
+.sidebar a:hover{
+  background:rgba(255,255,255,0.18);
+  color:#ffffff;
+  transform:translateX(6px);
+}
+
+/* ================= MAIN ================= */
+.content{
+  position:relative;
+  z-index:5;
+  margin-left:360px;
+  padding:48px 70px;
+}
+
+/* ================= HEADER ================= */
+.content h2{
+  font-size:38px;
+  font-weight:700;
+  margin-bottom:10px;
+}
+
+.subtitle{
+  font-size:15px;
+  color:#5b7fa3;
+  margin-bottom:45px;
+}
+
+/* ================= STATS ================= */
+.stats{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:36px;
+  margin-bottom:60px;
+}
+
+.stat-card{
+  position:relative;
+  padding:36px;
+  border-radius:30px;
+
+  background:
+    linear-gradient(180deg,
+      var(--glass-blue-soft),
+      var(--glass-blue));
+
+  backdrop-filter: blur(28px);
+  box-shadow:
+    0 50px 120px rgba(11,63,143,0.25),
+    inset 0 0 0 1px var(--stroke);
+
+  overflow:hidden;
+}
+
+.stat-card::after{
+  content:"";
+  position:absolute;
+  inset:auto -40% -60% -40%;
+  height:120%;
+  background:radial-gradient(circle,rgba(63,147,199,0.35),transparent 70%);
+}
+
+.stat-card h5{
+  font-size:15px;
+  color:#3f6f94;
+  margin-bottom:14px;
+}
+
+.stat-card h2{
+  font-size:42px;
+  font-weight:700;
+}
+
+/* ================= PANEL ================= */
+.panel{
+  border-radius:34px;
+  padding:40px;
+
+  background:
+    linear-gradient(180deg,
+      rgba(255,255,255,0.55),
+      rgba(255,255,255,0.28));
+
+  backdrop-filter: blur(32px);
+  box-shadow:
+    0 70px 160px rgba(11,63,143,0.28),
+    inset 0 0 0 1px var(--stroke);
+}
+
+.panel h5{
+  font-size:22px;
+  font-weight:600;
+  margin-bottom:18px;
+}
+</style>
 </head>
 
 <body>
 
+<!-- BACKGROUND -->
+<canvas id="ambient"></canvas>
+
+<!-- SIDEBAR -->
 <div class="sidebar">
+  <h3>Admin Portal</h3>
 
-    <h3>Admin Portal</h3>
-
-    <a th:href="@{/admin/dashboard}">🏠 Dashboard</a>
-    <a th:href="@{/admin/doctors}">🧑‍⚕️ Manage Doctors</a>
-    <a th:href="@{/admin/staff}">👨‍💼 Manage Staff</a>
-    <a th:href="@{/admin/patients}">🧍 Patients</a>
-    <a th:href="@{/admin/billing}">💳 Billing</a>
-    <a th:href="@{/admin/analytics}">📊 Analytics</a>
-    <a th:href="@{/logout}">🚪 Logout</a>
-
+  <a th:href="@{/admin/dashboard}">🏠 Dashboard</a>
+  <a th:href="@{/admin/doctors}">🧑‍⚕️ Manage Doctors</a>
+  <a th:href="@{/admin/staff}">👨‍💼 Manage Staff</a>
+  <a th:href="@{/admin/patients}">🧍 Patients</a>
+  <a th:href="@{/admin/billing}">💳 Billing</a>
+  <a th:href="@{/admin/analytics}">📊 Analytics</a>
+  <a th:href="@{/logout}">🚪 Logout</a>
 </div>
 
+<!-- MAIN -->
 <div class="content">
 
-    <h2>Welcome Admin 👑</h2>
+  <h2>Welcome Admin 👑</h2>
+  <div class="subtitle">Hospital Operations Overview</div>
 
-    <div class="row mt-4">
-
-        <div class="col-md-4">
-            <div class="stat-card shadow-sm">
-                <h5>Total Doctors</h5>
-                <h2>14</h2>
-            </div>
-        </div>
-
-        <div class="col-md-4">
-            <div class="stat-card shadow-sm">
-                <h5>Total Staff</h5>
-                <h2>32</h2>
-            </div>
-        </div>
-
-        <div class="col-md-4">
-            <div class="stat-card shadow-sm">
-                <h5>Active Patients</h5>
-                <h2>120</h2>
-            </div>
-        </div>
-
+  <div class="stats">
+    <div class="stat-card">
+      <h5>Total Doctors</h5>
+      <h2>2</h2>
     </div>
 
-    <div class="card mt-4 shadow-sm">
-        <div class="card-header bg-primary text-white">
-            <h5>Recent Activities</h5>
-        </div>
-
-        <div class="card-body">
-            <ul>
-                <li>New doctor added - Dr. Sharma</li>
-                <li>Billing updated for Patient #204</li>
-                <li>3 new patients admitted today</li>
-            </ul>
-        </div>
+    <div class="stat-card">
+      <h5>Total Staff</h5>
+      <h2>10</h2>
     </div>
+
+    <div class="stat-card">
+      <h5>Active Patients</h5>
+      <h2>9</h2>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h5>Recent Activities</h5>
+    <ul>
+      <li>New doctor added – Dr. Sharma</li>
+      <li>Billing updated for Patient #204</li>
+      <li>3 new patients admitted today</li>
+    </ul>
+  </div>
 
 </div>
+
+<!-- ================= LIGHT BLUE DOTS ================= -->
+<script>
+const canvas=document.getElementById("ambient");
+const ctx=canvas.getContext("2d");
+
+function resize(){
+  canvas.width=innerWidth;
+  canvas.height=innerHeight;
+}
+resize();
+window.onresize=resize;
+
+const dots=[...Array(140)].map(()=>({
+  x:Math.random()*canvas.width,
+  y:Math.random()*canvas.height,
+  r:Math.random()*2.4+1,
+  v:Math.random()*0.35+0.15,
+  o:Math.random()*0.35+0.2
+}));
+
+function animate(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  dots.forEach(d=>{
+    d.y-=d.v;
+    if(d.y<-10) d.y=canvas.height+10;
+    ctx.beginPath();
+    ctx.arc(d.x,d.y,d.r,0,Math.PI*2);
+    ctx.fillStyle=`rgba(143,211,255,${d.o})`; /* LIGHT BLUE DOTS */
+    ctx.fill();
+  });
+  requestAnimationFrame(animate);
+}
+animate();
+</script>
 
 </body>
 </html>

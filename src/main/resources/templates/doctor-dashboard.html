@@ -1,36 +1,343 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Doctor Dashboard</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style> body{background:#f4f6f9} .sidebar{width:250px;height:100vh;background:#0d6efd;position:fixed;padding:20px;color:#fff} .content{margin-left:270px;padding:25px} </style>
+<meta charset="UTF-8">
+<title>Doctor Intelligence Console</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+
+<style>
+:root{
+  --sky:#cfefff;
+  --light:#8fd3ff;
+  --mid:#3f93c7;
+  --deep:#1f4f73;
+  --ink:#0b2a3d;
+
+  --glass1:rgba(255,255,255,0.55);
+  --glass2:rgba(255,255,255,0.22);
+  --stroke:rgba(255,255,255,0.45);
+  --accent:#4fc3ff;
+}
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:"Inter","Segoe UI",system-ui,sans-serif;
+}
+
+body{
+  height:100vh;
+  background:
+    radial-gradient(circle at 50% 38%,
+      #ffffff 0%,
+      var(--sky) 28%,
+      var(--light) 48%,
+      var(--mid) 72%,
+      var(--deep) 100%);
+  overflow:hidden;
+  color:var(--ink);
+}
+
+canvas{
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+}
+
+/* SIDEBAR */
+.sidebar{
+  position:fixed;
+  top:30px;
+  left:30px;
+  bottom:30px;
+  width:280px;
+  background:linear-gradient(180deg,rgba(15,82,153,.88),rgba(11,53,88,.92));
+  backdrop-filter:blur(26px);
+  border-radius:28px;
+  box-shadow:0 80px 180px rgba(11,53,88,.55);
+  padding:36px 26px;
+  color:white;
+}
+
+.sidebar h2{
+  font-size:22px;
+  font-weight:700;
+  margin-bottom:50px;
+}
+
+.nav{
+  display:flex;
+  flex-direction:column;
+  gap:16px;
+}
+
+.nav a{
+  text-decoration:none;
+  color:#d7ecff;
+  padding:16px 20px;
+  border-radius:16px;
+  display:flex;
+  align-items:center;
+  gap:14px;
+  font-weight:500;
+  transition:.35s;
+}
+
+.nav a i{
+  font-size:18px;
+  transform:translateY(1px);
+}
+
+.nav a.active,
+.nav a:hover{
+  background:rgba(255,255,255,.18);
+  color:#fff;
+  transform:translateX(6px);
+}
+
+/* MAIN */
+.main{
+  margin-left:360px;
+  padding:48px 70px;
+  height:100vh;
+  overflow:auto;
+}
+
+/* HEADER */
+.header{
+  margin-bottom:50px;
+}
+
+.header h1{
+  font-size:40px;
+  font-weight:700;
+}
+
+.header span{
+  color:#4c6f86;
+  font-size:35px;
+}
+
+/* STATS */
+.stats{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:36px;
+  margin-bottom:60px;
+}
+
+.stat{
+  border-radius:30px;
+  background:linear-gradient(180deg,var(--glass1),var(--glass2));
+  backdrop-filter:blur(30px);
+  box-shadow:0 70px 160px rgba(31,79,115,.45),
+             inset 0 0 0 1px var(--stroke);
+  padding:28px 32px 34px;
+}
+
+.stat-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:16px;
+}
+
+.stat-header h6{
+  color:#5c7d94;
+  font-size:14px;
+  font-weight:600;
+}
+
+.stat-header i{
+  font-size:34px;
+  color:var(--accent);
+}
+
+.stat h2{
+  font-size:38px;
+  font-weight:700;
+}
+
+/* PANEL */
+.panel{
+  border-radius:34px;
+  padding:40px;
+  background:linear-gradient(180deg,rgba(255,255,255,.50),rgba(255,255,255,.22));
+  backdrop-filter:blur(32px);
+  box-shadow:0 80px 180px rgba(31,79,115,.45),
+             inset 0 0 0 1px var(--stroke);
+}
+
+.panel-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:26px;
+}
+
+.panel-header h3{
+  font-size:24px;
+  font-weight:600;
+}
+
+.search{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  background:white;
+  padding:14px 18px;
+  border-radius:18px;
+  box-shadow:0 14px 36px rgba(0,0,0,.12);
+}
+
+.search input{
+  border:none;
+  outline:none;
+  font-size:14px;
+}
+
+/* TABLE */
+table{
+  width:100%;
+  border-collapse:separate;
+  border-spacing:0 16px;
+}
+
+thead th{
+  color:#5c7d94;
+  font-weight:600;
+  font-size:14px;
+}
+
+tbody tr{
+  background:white;
+  border-radius:18px;
+  box-shadow:0 16px 40px rgba(0,0,0,.10);
+}
+
+tbody td{
+  padding:20px;
+  font-size:14px;
+}
+
+tbody tr td:first-child{border-radius:18px 0 0 18px;}
+tbody tr td:last-child{border-radius:0 18px 18px 0;}
+
+.view{
+  background:linear-gradient(135deg,#6fd3ff,#3b82c4);
+  color:white;
+  padding:10px 22px;
+  border-radius:14px;
+  text-decoration:none;
+  font-weight:600;
+}
+</style>
 </head>
+
 <body>
+
+<canvas id="ambient"></canvas>
+
 <div class="sidebar">
-    <h4>Doctor Portal</h4>
-    <a th:href="@{/doctor/dashboard}" class="text-white">Dashboard</a>
-    <a th:href="@{/doctor/patients}" class="text-white">My Patients</a>
-    <a th:href="@{/logout}" class="text-white">Logout</a>
+  <h2>Doctor Portal</h2>
+  <div class="nav">
+    <a class="active"><i class="bi bi-speedometer2"></i> Dashboard</a>
+    <a th:href="@{/doctor/patients}"><i class="bi bi-people"></i> Patients</a>
+    <a th:href="@{/logout}"><i class="bi bi-box-arrow-right"></i> Logout</a>
+  </div>
 </div>
 
-<div class="content">
-    <h2>Welcome, <span th:text="${doctorName}">Doctor</span></h2>
+<div class="main">
 
-    <div class="row mt-4">
-        <div class="col-md-4 card p-3">
-            <h6>Total Patients</h6>
-            <h3 th:text="${patientCount}">0</h3>
-        </div>
-        <div class="col-md-4 card p-3">
-            <h6>Today's Appointments</h6>
-            <h3 th:text="${appointmentCount}">0</h3>
-        </div>
-        <div class="col-md-4 card p-3">
-            <h6>Pending Reports</h6>
-            <h3 th:text="${pendingReports}">0</h3>
-        </div>
+  <div class="header">
+    <h1>Welcome, <span th:text="${doctorName}">Doctor</span></h1>
+    
+  </div>
+
+  <div class="stats">
+    <div class="stat">
+      <div class="stat-header">
+        <h6>Total Patients</h6>
+        <i class="bi bi-people-fill"></i>
+      </div>
+      <h2 th:text="${patientCount}">0</h2>
     </div>
+
+    <div class="stat">
+      <div class="stat-header">
+        <h6>Today’s Appointments</h6>
+        <i class="bi bi-calendar-check"></i>
+      </div>
+      <h2 th:text="${appointmentCount}">0</h2>
+    </div>
+
+    <div class="stat">
+      <div class="stat-header">
+        <h6>Pending Reports</h6>
+        <i class="bi bi-file-earmark-medical"></i>
+      </div>
+      <h2 th:text="${pendingReports}">0</h2>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-header">
+      <h3>Assigned Patients</h3>
+      <div class="search">
+        <i class="bi bi-funnel-fill"></i>
+        <input placeholder="Search patient..." onkeyup="filterPatients()" id="patientSearch">
+      </div>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th><th>Age</th><th>Gender</th><th>Phone</th><th>Disease</th><th></th>
+        </tr>
+      </thead>
+      <tbody id="patientsTable">
+        <tr th:each="p : ${patients}">
+          <td th:text="${p.name}">Name</td>
+          <td th:text="${p.age}">Age</td>
+          <td th:text="${p.gender}">Gender</td>
+          <td th:text="${p.phone}">Phone</td>
+          <td th:text="${p.disease}">Disease</td>
+          <td><a class="view" th:href="@{/doctor/patient/{id}(id=${p.id})}">View</a></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
 </div>
+
+<script>
+const c=document.getElementById("ambient"),ctx=c.getContext("2d");
+c.width=innerWidth;c.height=innerHeight;
+const p=[...Array(90)].map(()=>({x:Math.random()*c.width,y:Math.random()*c.height,v:Math.random()*0.3+0.1}));
+function draw(){
+  ctx.clearRect(0,0,c.width,c.height);
+  p.forEach(o=>{
+    o.y-=o.v;
+    if(o.y<0) o.y=c.height;
+    ctx.beginPath();
+    ctx.arc(o.x,o.y,2.4,0,Math.PI*2);
+    ctx.fillStyle="rgba(255,255,255,0.35)";
+    ctx.fill();
+  });
+  requestAnimationFrame(draw);
+}
+draw();
+
+function filterPatients(){
+  const v=document.getElementById("patientSearch").value.toLowerCase();
+  document.querySelectorAll("#patientsTable tr").forEach(r=>{
+    r.style.display=r.innerText.toLowerCase().includes(v)?"":"none";
+  });
+}
+</script>
+
 </body>
 </html>
