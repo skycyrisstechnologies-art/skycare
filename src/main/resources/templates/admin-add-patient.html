@@ -6,19 +6,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
 <style>
-/* ================= ROOT ================= */
 :root{
   --nav-dark:#0b3f8f;
   --nav-deep:#072f66;
-
   --bg1:#f7fbff;
   --bg2:#d6ecfb;
   --bg3:#a8d6f5;
-
   --ink:#0a2540;
 }
 
-/* ================= RESET ================= */
 *{
   margin:0;
   padding:0;
@@ -26,7 +22,6 @@
   font-family:"Inter","Segoe UI",system-ui,sans-serif;
 }
 
-/* ================= BODY ================= */
 html, body{
   min-height:100%;
   overflow-y:auto;
@@ -42,7 +37,6 @@ body{
   color:var(--ink);
 }
 
-/* ================= DOTS ================= */
 #ambient{
   position:fixed;
   inset:0;
@@ -50,7 +44,7 @@ body{
   z-index:0;
 }
 
-/* ================= SIDEBAR ================= */
+/* SIDEBAR */
 .sidebar{
   position:fixed;
   top:30px;
@@ -87,7 +81,7 @@ body{
   color:white;
 }
 
-/* ================= MAIN ================= */
+/* MAIN */
 .main{
   margin-left:360px;
   padding:60px 80px;
@@ -95,7 +89,7 @@ body{
   z-index:5;
 }
 
-/* ================= FORM CARD ================= */
+/* CARD */
 .card{
   max-width:720px;
   margin:auto;
@@ -106,9 +100,16 @@ body{
   box-shadow:0 40px 120px rgba(0,0,0,0.15);
 }
 
+/* HEADER */
+.card-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:6px;
+}
+
 .card h1{
   font-size:36px;
-  margin-bottom:10px;
 }
 
 .card p{
@@ -116,7 +117,31 @@ body{
   margin-bottom:32px;
 }
 
-/* ================= FORM ================= */
+/* BACK BUTTON */
+.back-btn{
+  border:none;
+  padding:10px 22px;
+  border-radius:18px;
+  font-size:14px;
+  font-weight:600;
+  color:#0a2540;
+  cursor:pointer;
+  background:linear-gradient(180deg,rgba(255,255,255,.95),rgba(255,255,255,.65));
+  backdrop-filter:blur(18px);
+  box-shadow:
+    0 14px 36px rgba(11,63,143,.25),
+    inset 0 0 0 1px rgba(255,255,255,.7);
+  transition:.3s ease;
+}
+
+.back-btn:hover{
+  transform:translateY(-2px);
+  box-shadow:
+    0 26px 60px rgba(11,63,143,.35),
+    inset 0 0 0 1px rgba(255,255,255,.85);
+}
+
+/* FORM */
 .form-group{
   margin-bottom:22px;
 }
@@ -183,7 +208,12 @@ input, select{
 <div class="main">
 
   <div class="card">
-    <h1>Add Patient</h1>
+
+    <div class="card-header">
+      <h1>Add Patient</h1>
+      <button class="back-btn" onclick="history.back()">← Back</button>
+    </div>
+
     <p>Register a new patient and assign a doctor</p>
 
     <form th:action="@{/admin/patients/add}" th:object="${patient}" method="post">
@@ -238,13 +268,12 @@ input, select{
 
 </div>
 
-<!-- ================= DOT ANIMATION ================= -->
 <script>
 const c=document.getElementById("ambient"),ctx=c.getContext("2d");
 function resize(){c.width=innerWidth;c.height=innerHeight}
 resize();window.addEventListener("resize",resize);
 
-const dots=[...Array(140)].map(()=>({
+const dots=[...Array(140)].map(() => ({
   x:Math.random()*c.width,
   y:Math.random()*c.height,
   r:Math.random()*2.5+1,
@@ -265,6 +294,21 @@ const dots=[...Array(140)].map(()=>({
   requestAnimationFrame(anim);
 })();
 </script>
+
+<script>
+document.addEventListener("contextmenu", e => e.preventDefault());
+
+document.addEventListener("keydown", e => {
+  if (
+    e.key === "F12" ||
+    (e.ctrlKey && e.shiftKey && ["I","J","C"].includes(e.key)) ||
+    (e.ctrlKey && e.key === "U")
+  ) {
+    e.preventDefault();
+  }
+});
+</script>
+
 
 </body>
 </html>

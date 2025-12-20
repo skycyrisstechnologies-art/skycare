@@ -7,18 +7,13 @@
 
 <style>
 :root{
-  /* Dark logo blue */
   --nav-dark:#0b3f8f;
   --nav-deep:#072f66;
-
-  /* Light glass blue */
   --glass-blue:#bfe6ff;
   --glass-blue-soft:#e8f6ff;
-
   --bg1:#f7fbff;
   --bg2:#d6ecfb;
   --bg3:#a8d6f5;
-
   --ink:#0a2540;
   --stroke:rgba(255,255,255,0.45);
 }
@@ -93,6 +88,13 @@ body{
   z-index:5;
 }
 
+/* HEADER */
+.header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+
 h1{
   font-size:40px;
 }
@@ -100,6 +102,30 @@ h1{
 .sub{
   color:#4e7aa0;
   margin-bottom:30px;
+}
+
+/* BACK BUTTON */
+.back-btn{
+  border:none;
+  padding:10px 22px;
+  border-radius:18px;
+  font-size:14px;
+  font-weight:600;
+  color:#0a2540;
+  cursor:pointer;
+  background:linear-gradient(180deg,rgba(255,255,255,.95),rgba(255,255,255,.65));
+  backdrop-filter:blur(18px);
+  box-shadow:
+    0 14px 36px rgba(11,63,143,.25),
+    inset 0 0 0 1px rgba(255,255,255,.7);
+  transition:.3s ease;
+}
+
+.back-btn:hover{
+  transform:translateY(-2px);
+  box-shadow:
+    0 26px 60px rgba(11,63,143,.35),
+    inset 0 0 0 1px rgba(255,255,255,.85);
 }
 
 /* TOP BAR */
@@ -131,14 +157,14 @@ h1{
 .row-card{
   display:grid;
   grid-template-columns:
-    0.9fr   /* Code */
-    1fr     /* Name */
-    1.4fr   /* Specialization */
-    1.2fr   /* Wing */
-    0.9fr   /* Status */
-    1.2fr   /* Phone */
-    1.6fr   /* Email */
-    1fr;    /* Actions */
+    0.9fr
+    1fr
+    1.4fr
+    1.2fr
+    0.9fr
+    1.2fr
+    1.6fr
+    1fr;
   align-items:center;
   column-gap:12px;
 }
@@ -201,7 +227,12 @@ h1{
 
 <!-- CONTENT -->
 <div class="content">
-  <h1>Manage Doctors</h1>
+
+  <div class="header">
+    <h1>Manage Doctors</h1>
+    <button class="back-btn" onclick="history.back()">← Back</button>
+  </div>
+
   <div class="sub">Doctor registry & access control</div>
 
   <div class="top-bar">
@@ -240,13 +271,12 @@ h1{
   </div>
 </div>
 
-<!-- DOT ANIMATION -->
 <script>
 const c=document.getElementById("ambient"),ctx=c.getContext("2d");
 function resize(){c.width=innerWidth;c.height=innerHeight}
 resize();onresize=resize;
 
-const dots=[...Array(140)].map(()=>({
+const dots=[...Array(140)].map(() => ({
   x:Math.random()*c.width,
   y:Math.random()*c.height,
   r:Math.random()*2+1,
@@ -265,6 +295,20 @@ const dots=[...Array(140)].map(()=>({
   });
   requestAnimationFrame(animate);
 })();
+</script>
+
+<script>
+document.addEventListener("contextmenu", e => e.preventDefault());
+
+document.addEventListener("keydown", e => {
+  if (
+    e.key === "F12" ||
+    (e.ctrlKey && e.shiftKey && ["I","J","C"].includes(e.key)) ||
+    (e.ctrlKey && e.key === "U")
+  ) {
+    e.preventDefault();
+  }
+});
 </script>
 
 </body>

@@ -8,25 +8,18 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
 <style>
-/* ============ ROOT COLORS ============ */
 :root{
-  /* Dark logo blue */
   --nav-dark:#0b3f8f;
   --nav-deep:#072f66;
-
-  /* Light glass blue */
   --glass-blue:#bfe6ff;
   --glass-blue-soft:#e8f6ff;
-
   --bg1:#f7fbff;
   --bg2:#d6ecfb;
   --bg3:#a8d6f5;
-
   --ink:#0a2540;
   --stroke:rgba(255,255,255,0.45);
 }
 
-/* ============ RESET ============ */
 *{
   margin:0;
   padding:0;
@@ -45,7 +38,8 @@ body{
   overflow-x:hidden;
   color:var(--ink);
 }
-/* ============ BACKGROUND DOTS ============ */
+
+/* BACKGROUND DOTS */
 #ambient{
   position:fixed;
   inset:0;
@@ -53,7 +47,7 @@ body{
   pointer-events:none;
 }
 
-/* ============ SIDEBAR ============ */
+/* SIDEBAR */
 .sidebar{
   position:fixed;
   top:30px;
@@ -61,7 +55,6 @@ body{
   bottom:30px;
   width:280px;
   z-index:5;
-
   background:linear-gradient(180deg,#0f3d7a,#082f5c);
   border-radius:28px;
   padding:36px 26px;
@@ -90,7 +83,7 @@ body{
   transform:translateX(6px);
 }
 
-/* ============ MAIN ============ */
+/* MAIN */
 .main{
   position:relative;
   z-index:5;
@@ -98,29 +91,30 @@ body{
   padding:60px 80px;
 }
 
-/* ============ FORM CARD ============ */
+/* FORM CARD */
 .form-card{
   max-width:760px;
   margin:auto;
   padding:46px;
   border-radius:34px;
-
-  background:
-    linear-gradient(180deg,
-      var(--glass1),
-      var(--glass2));
-
+  background:linear-gradient(180deg,var(--glass-blue-soft),var(--glass-blue));
   backdrop-filter: blur(32px);
   box-shadow:
     0 80px 180px rgba(31,79,115,0.45),
     inset 0 0 0 1px var(--stroke);
 }
 
-/* ============ HEADER ============ */
+/* HEADER */
+.header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:6px;
+}
+
 .form-card h2{
   font-size:32px;
   font-weight:700;
-  margin-bottom:6px;
 }
 
 .subtitle{
@@ -129,7 +123,31 @@ body{
   margin-bottom:36px;
 }
 
-/* ============ INPUTS ============ */
+/* BACK BUTTON */
+.back-btn{
+  border:none;
+  padding:10px 22px;
+  border-radius:18px;
+  font-size:14px;
+  font-weight:600;
+  color:#0a2540;
+  cursor:pointer;
+  background:linear-gradient(180deg,rgba(255,255,255,.95),rgba(255,255,255,.65));
+  backdrop-filter:blur(18px);
+  box-shadow:
+    0 14px 36px rgba(11,63,143,.25),
+    inset 0 0 0 1px rgba(255,255,255,.7);
+  transition:.3s ease;
+}
+
+.back-btn:hover{
+  transform:translateY(-2px);
+  box-shadow:
+    0 26px 60px rgba(11,63,143,.35),
+    inset 0 0 0 1px rgba(255,255,255,.85);
+}
+
+/* INPUTS */
 .form-label{
   font-weight:600;
   color:#375b73;
@@ -142,7 +160,7 @@ body{
   box-shadow:0 10px 26px rgba(0,0,0,0.08);
 }
 
-/* ============ BUTTONS ============ */
+/* BUTTONS */
 .actions{
   display:flex;
   gap:16px;
@@ -166,7 +184,7 @@ body{
   font-weight:600;
 }
 
-/* ============ RESPONSIVE ============ */
+/* RESPONSIVE */
 @media(max-width:1000px){
   .sidebar{display:none;}
   .main{margin-left:0;padding:40px;}
@@ -195,7 +213,11 @@ body{
 
   <div class="form-card">
 
-    <h2>Add Doctor</h2>
+    <div class="header">
+      <h2>Add Doctor</h2>
+      <button class="back-btn" onclick="history.back()">← Back</button>
+    </div>
+
     <div class="subtitle">Register a new doctor & assign access</div>
 
     <form th:action="@{/admin/doctors/add}"
@@ -249,13 +271,12 @@ body{
 
 </div>
 
-<!-- ============ DOT ANIMATION ============ -->
 <script>
 const c=document.getElementById("ambient"),ctx=c.getContext("2d");
 function resize(){c.width=innerWidth;c.height=innerHeight}
 resize();onresize=resize;
 
-const dots=[...Array(140)].map(()=>({
+const dots=[...Array(140)].map(() => ({
   x:Math.random()*c.width,
   y:Math.random()*c.height,
   r:Math.random()*2.6+1.2,
@@ -267,7 +288,7 @@ function animate(){
   ctx.clearRect(0,0,c.width,c.height);
   dots.forEach(d=>{
     d.y-=d.v;
-    if(d.y<-10) d.y=c.height+10;
+    if(d.y<-10)d.y=c.height+10;
     ctx.beginPath();
     ctx.arc(d.x,d.y,d.r,0,Math.PI*2);
     ctx.fillStyle=`rgba(143,211,255,${d.o})`;

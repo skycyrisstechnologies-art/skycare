@@ -109,6 +109,9 @@ canvas{
 /* HEADER */
 .header{
   margin-bottom:50px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
 }
 
 .header h1{
@@ -119,6 +122,41 @@ canvas{
 .header span{
   color:#4c6f86;
   font-size:35px;
+}
+
+/* ✅ FANCY BACK BUTTON (ONLY ADDITION) */
+.back-btn{
+  position:relative;
+  border:none;
+  padding:12px 22px;
+  border-radius:18px;
+  font-size:14px;
+  font-weight:600;
+  color:#0b2a3d;
+  cursor:pointer;
+  background:
+    linear-gradient(180deg,
+      rgba(255,255,255,.85),
+      rgba(255,255,255,.55));
+  backdrop-filter:blur(16px);
+  box-shadow:
+    0 18px 40px rgba(31,79,115,.25),
+    inset 0 0 0 1px rgba(255,255,255,.65);
+  display:flex;
+  align-items:center;
+  gap:10px;
+  transition:all .35s ease;
+}
+
+.back-btn:hover{
+  transform:translateY(-3px);
+  box-shadow:
+    0 26px 60px rgba(31,79,115,.35),
+    inset 0 0 0 1px rgba(255,255,255,.75);
+}
+
+.back-btn i{
+  font-size:16px;
 }
 
 /* STATS */
@@ -254,7 +292,9 @@ tbody tr td:last-child{border-radius:0 18px 18px 0;}
 
   <div class="header">
     <h1>Welcome, <span th:text="${doctorName}">Doctor</span></h1>
-    
+    <button class="back-btn" onclick="history.back()">
+      <i class="bi bi-arrow-left"></i> Back
+    </button>
   </div>
 
   <div class="stats">

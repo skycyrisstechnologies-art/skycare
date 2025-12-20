@@ -6,13 +6,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class HomeController {
 
-    @GetMapping("/")
+    @GetMapping("/home")
     public String home() {
-        return "redirect:/login";
-    }
-
-    @GetMapping("/login")
-    public String loginPage() {
-        return "login";   // loads login.html
+        return "home"; // maps to home.html
     }
 }

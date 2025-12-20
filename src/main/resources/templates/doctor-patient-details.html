@@ -110,6 +110,30 @@ body{
 
 .table{margin-bottom:0;}
 .badge{font-size:12px;}
+
+/* ===== FANCY BACK BUTTON ===== */
+.back-btn{
+  border:none;
+  padding:10px 20px;
+  border-radius:18px;
+  font-size:14px;
+  font-weight:600;
+  color:#0b2a3d;
+  cursor:pointer;
+  background:linear-gradient(180deg,rgba(255,255,255,.9),rgba(255,255,255,.6));
+  backdrop-filter:blur(16px);
+  box-shadow:
+    0 14px 34px rgba(31,79,115,.25),
+    inset 0 0 0 1px rgba(255,255,255,.65);
+  transition:.3s ease;
+}
+
+.back-btn:hover{
+  transform:translateY(-2px);
+  box-shadow:
+    0 24px 60px rgba(31,79,115,.35),
+    inset 0 0 0 1px rgba(255,255,255,.8);
+}
 </style>
 </head>
 
@@ -131,8 +155,12 @@ body{
 
 <!-- BASIC INFO -->
 <div class="card card-section p-4">
-  <h3 th:text="${patient.name}">Patient Name</h3>
-  <div class="row mt-3">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h3 th:text="${patient.name}">Patient Name</h3>
+    <button class="back-btn" onclick="history.back()">← Back</button>
+  </div>
+
+  <div class="row">
     <div class="col-md-3"><strong>Age:</strong> <span th:text="${patient.age}"></span></div>
     <div class="col-md-3"><strong>Gender:</strong> <span th:text="${patient.gender}"></span></div>
     <div class="col-md-3"><strong>Phone:</strong> <span th:text="${patient.phone}"></span></div>
@@ -238,7 +266,7 @@ body{
 
 </div>
 
-<!-- ===== BACKGROUND DOTS SCRIPT ===== -->
+<!-- BACKGROUND DOTS SCRIPT -->
 <script>
 const canvas=document.getElementById("ambient");
 const ctx=canvas.getContext("2d");
@@ -250,7 +278,7 @@ function resize(){
 resize();
 onresize=resize;
 
-const dots=[...Array(140)].map(()=>({
+const dots=[...Array(140)].map(() => ({
   x:Math.random()*canvas.width,
   y:Math.random()*canvas.height,
   r:Math.random()*2.5+1,

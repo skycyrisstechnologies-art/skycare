@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>SkyCare | Select Portal</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+:root{
+  --bg1:#071d33;
+  --bg2:#0b2f52;
+  --cyan:#5aa7da;
+  --blue:#0e4f9a;
+  --violet:#a9d3f2;
+  --glass:rgba(255,255,255,0.10);
+}
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:"Inter","Segoe UI",system-ui,sans-serif;
+}
+
+body{
+  height:100vh;
+  background:
+    radial-gradient(circle at 50% 30%, #0b2a3d, var(--bg1) 70%);
+  overflow:hidden;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  perspective:1600px;
+  color:white;
+}
+
+/* ================= ENERGY BACKGROUND ================= */
+canvas{
+  position:absolute;
+  inset:0;
+  z-index:0;
+}
+
+/* ================= MAIN WRAPPER ================= */
+.scene{
+  position:relative;
+  z-index:10;
+  text-align:center;
+}
+
+.brand{
+  font-family:"Brush Script MT","Segoe Script",cursive;
+  font-size:64px;
+  color:var(--cyan);
+  text-shadow:
+    0 0 40px rgba(107,231,255,0.6),
+    0 0 90px rgba(107,231,255,0.35);
+}
+
+.subtitle{
+  margin-top:10px;
+  margin-bottom:60px;
+  font-size:16px;
+  color:#b8e9ff;
+  opacity:0.9;
+}
+
+/* ================= 3D PORTALS ================= */
+.portals{
+  display:flex;
+  gap:48px;
+}
+
+/* CARD */
+.portal{
+  width:280px;
+  height:360px;
+  border-radius:28px;
+  background:
+    linear-gradient(180deg,
+      rgba(255,255,255,0.18),
+      rgba(255,255,255,0.03));
+  backdrop-filter: blur(25px);
+  box-shadow:
+    0 60px 140px rgba(0,0,0,0.75),
+    inset 0 0 0 1px rgba(255,255,255,0.25);
+  transform-style:preserve-3d;
+  transition:transform .25s ease;
+  cursor:pointer;
+  position:relative;
+  overflow:hidden;
+}
+
+/* GLOW EDGE */
+.portal::before{
+  content:"";
+  position:absolute;
+  inset:-1px;
+  border-radius:inherit;
+  background:
+    linear-gradient(120deg, transparent, var(--cyan), transparent);
+  opacity:0.25;
+}
+
+/* INNER CONTENT */
+.portal-inner{
+  position:absolute;
+  inset:0;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  transform:translateZ(50px);
+}
+
+/* ICON */
+.icon{
+  width:90px;
+  height:90px;
+  border-radius:50%;
+  background:
+    radial-gradient(circle at 30% 30%, white, var(--cyan));
+  box-shadow:
+    0 0 40px rgba(107,231,255,0.9),
+    0 0 90px rgba(107,231,255,0.45);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:36px;
+  color:#00263a;
+  margin-bottom:28px;
+}
+
+/* TITLE */
+.portal h3{
+  font-size:24px;
+  margin-bottom:10px;
+}
+
+/* TEXT */
+.portal p{
+  font-size:14px;
+  opacity:0.85;
+  width:80%;
+}
+
+/* HOVER FLOAT */
+.portal:hover{
+  transform:translateY(-18px) scale(1.03);
+}
+
+/* DIFFERENT COLOR THEMES */
+.admin{ --cyan:#0e4f9a; }
+.doctor{ --cyan:#5aa7da; }
+.staff{ --cyan:#a9d3f2; }
+
+/* ================= FOOTER ================= */
+.footer{
+  margin-top:70px;
+  font-size:13px;
+  opacity:0.6;
+}
+
+/* ================= MOBILE ================= */
+@media(max-width:900px){
+  .portals{
+    flex-direction:column;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="bg"></canvas>
+
+<div class="scene">
+  <div class="brand">SkyCare</div>
+  <div class="subtitle">Choose your gateway into the Hospital management System</div>
+
+  <div class="portals">
+
+    <div class="portal admin" onclick="go('ADMIN')">
+      <div class="portal-inner">
+        <div class="icon">⚙</div>
+        <h3>Admin Portal</h3>
+        <p>System control, analytics & hospital operations</p>
+      </div>
+    </div>
+
+    <div class="portal doctor" onclick="go('DOCTOR')">
+      <div class="portal-inner">
+        <div class="icon">🩺</div>
+        <h3>Doctor Portal</h3>
+        <p>Patients, diagnosis, prescriptions</p>
+      </div>
+    </div>
+
+    <div class="portal staff" onclick="go('STAFF')">
+      <div class="portal-inner">
+        <div class="icon">🏥</div>
+        <h3>Staff Portal</h3>
+        <p>Care coordination & daily operations</p>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footer">© Powered by SkyCyriss</div>
+</div>
+
+<script>
+/* ================= 3D TILT ================= */
+document.querySelectorAll(".portal").forEach(card=>{
+  card.addEventListener("mousemove",e=>{
+    const r=card.getBoundingClientRect();
+    const x=e.clientX-r.left;
+    const y=e.clientY-r.top;
+    const rx=(y/r.height-0.5)*-18;
+    const ry=(x/r.width-0.5)*18;
+    card.style.transform=`rotateX(${rx}deg) rotateY(${ry}deg) translateY(-18px)`;
+  });
+  card.addEventListener("mouseleave",()=>{
+    card.style.transform="";
+  });
+});
+
+function go(role){
+  window.location.href = "/login?role=" + role;
+}
+
+/* ================= ENERGY PARTICLES ================= */
+const c=document.getElementById("bg");
+const ctx=c.getContext("2d");
+c.width=innerWidth; c.height=innerHeight;
+
+const dots=[...Array(120)].map(() => ({
+  x:Math.random()*c.width,
+  y:Math.random()*c.height,
+  v:Math.random()*0.5+0.2
+}));
+
+function draw(){
+  ctx.clearRect(0,0,c.width,c.height);
+  dots.forEach(d=>{
+    d.y-=d.v;
+    if(d.y<0) d.y=c.height;
+    ctx.fillStyle="rgba(107,231,255,0.12)";
+    ctx.beginPath();
+    ctx.arc(d.x,d.y,2,0,Math.PI*2);
+    ctx.fill();
+  });
+  requestAnimationFrame(draw);
+}
+draw();
+
+onresize=()=>{ c.width=innerWidth; c.height=innerHeight; };
+</script>
+
+</body>
+</html>

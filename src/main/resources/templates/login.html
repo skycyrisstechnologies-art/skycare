@@ -46,8 +46,8 @@ canvas{
 .login{
   position:relative;
   z-index:10;
-  width:420px;
-  padding:36px 50px;
+  width:380px;              /* ✅ CHANGED */
+  padding:30px 42px;        /* ✅ CHANGED */
   border-radius:28px;
   background:
     linear-gradient(180deg,
@@ -62,7 +62,7 @@ canvas{
 
 /* ✨ BRAND NAME ✨ */
 .brand{
-  font-family: "Brush Script MT","Segoe Script","Lucida Handwriting",cursive;
+  font-family:"Brush Script MT","Segoe Script","Lucida Handwriting",cursive;
   font-size:48px;
   font-weight:600;
   letter-spacing:1px;
@@ -148,13 +148,24 @@ canvas{
 
 <div class="login">
 
-  <!-- ✨ NEW BRAND TEXT ✨ -->
   <div class="brand">SkyCare</div>
 
-  <h2>LOGIN</h2>
-  <p class="subtitle">Welcome back, Please login.</p>
+  <h2 th:if="${role == 'ADMIN'}">Welcome Admin</h2>
+  <h2 th:if="${role == 'DOCTOR'}">Welcome Doctor</h2>
+  <h2 th:if="${role == 'STAFF'}">Welcome Staff</h2>
+  <h2 th:if="${role == null}">LOGIN</h2>
+
+  <p class="subtitle" th:if="${role != null}">
+    Please login to continue
+  </p>
+  <p class="subtitle" th:if="${role == null}">
+    Welcome back, Please login.
+  </p>
 
   <form th:action="@{/login}" method="post">
+
+    <input type="hidden" name="role" th:value="${role}" />
+
     <input type="hidden"
            th:name="${_csrf.parameterName}"
            th:value="${_csrf.token}" />
@@ -295,6 +306,20 @@ onresize=()=>{
   dna.width=network.width=icon.width=innerWidth;
   dna.height=network.height=icon.height=innerHeight;
 };
+</script>
+
+<script>
+document.addEventListener("contextmenu", e => e.preventDefault());
+
+document.addEventListener("keydown", e => {
+  if (
+    e.key === "F12" ||
+    (e.ctrlKey && e.shiftKey && ["I","J","C"].includes(e.key)) ||
+    (e.ctrlKey && e.key === "U")
+  ) {
+    e.preventDefault();
+  }
+});
 </script>
 
 </body>

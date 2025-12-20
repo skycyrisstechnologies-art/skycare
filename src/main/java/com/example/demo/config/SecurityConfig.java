@@ -34,14 +34,21 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login", "/css/**", "/js/**").permitAll()
-                        .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/doctor/**").hasRole("DOCTOR")
-                        .requestMatchers("/staff/**").hasAnyRole(
-                                "RECEPTIONIST", "NURSE", "PHARMACIST")
-                        .anyRequest().authenticated()
-                )
+               .authorizeHttpRequests(auth -> auth
+    .requestMatchers(
+            "/login",
+            "/home",
+            "/css/**",
+            "/js/**",
+            "/images/**"
+    ).permitAll()
+    .requestMatchers("/admin/**").hasRole("ADMIN")
+    .requestMatchers("/doctor/**").hasRole("DOCTOR")
+    .requestMatchers("/staff/**").hasAnyRole(
+            "RECEPTIONIST", "NURSE", "PHARMACIST")
+    .anyRequest().authenticated()
+)
+
                 .formLogin(form -> form
                         .loginPage("/login")
                         .loginProcessingUrl("/login")
