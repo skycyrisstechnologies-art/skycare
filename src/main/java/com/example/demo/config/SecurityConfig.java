@@ -15,7 +15,6 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     private final CustomUserDetailsService userDetailsService;
- 
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -34,32 +33,42 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http
-               .authorizeHttpRequests(auth -> auth
-    .requestMatchers(
-            "/login",
-            "/home",
-            "/css/**",
-            "/js/**",
-            "/images/**"
-    ).permitAll()
-    .requestMatchers("/admin/**").hasRole("ADMIN")
-    .requestMatchers("/doctor/**").hasRole("DOCTOR")
-    .requestMatchers("/staff/**").hasAnyRole(
-            "RECEPTIONIST", "NURSE", "PHARMACIST")
-    .anyRequest().authenticated()
-)
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers(
+                        "/login",
+                        "/home",
+                        "/css/**",
+                        "/js/**",
+                        "/images/**"
+                ).permitAll()
+                .requestMatchers("/admin/**").hasRole("ADMIN")
+                .requestMatchers("/doctor/**").hasRole("DOCTOR")
+                .requestMatchers("/staff/**")
+                    .hasAnyRole("RECEPTIONIST", "NURSE", "PHARMACIST")
+                .anyRequest().authenticated()
+            )
 
-                .formLogin(form -> form
-                        .loginPage("/login")
-                        .loginProcessingUrl("/login")
-                        .defaultSuccessUrl("/postLogin", true)
-                        .permitAll()
-                )
-                .logout(logout -> logout
-                        .logoutUrl("/logout")
-                        .logoutSuccessUrl("/login?logout")
-                        .permitAll()
-                );
+            .formLogin(form -> form
+                .loginPage("/login")
+                .loginProcessingUrl("/login")
+                .defaultSuccessUrl("/postLogin", true)
+                .permitAll()
+            )
+
+            .logout(logout -> logout
+                .logoutUrl("/logout")
+                .logoutSuccessUrl("/login?logout")
+                .invalidateHttpSession(true)
+                .deleteCookies("JSESSIONID")
+                .permitAll()
+            )
+
+            // 🔐 CRITICAL FOR BACK BUTTON SECURITY
+            .sessionManagement(session -> session
+                .sessionFixation().migrateSession()
+                .maximumSessions(1)
+                .expiredUrl("/login?expired")
+            );
 
         return http.build();
     }

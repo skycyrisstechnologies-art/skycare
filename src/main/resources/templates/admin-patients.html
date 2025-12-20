@@ -300,5 +300,28 @@ function filterPatients(){
 }
 </script>
 
+<script>
+(function () {
+  let navigatedBack = false;
+
+  window.addEventListener("pageshow", function (event) {
+    if (event.persisted) {
+      navigator.sendBeacon("/kill-session");
+      window.location.replace("/login?expired");
+    }
+  });
+
+  window.addEventListener("popstate", function () {
+    navigatedBack = true;
+  });
+
+  window.addEventListener("beforeunload", function () {
+    if (navigatedBack) {
+      navigator.sendBeacon("/kill-session");
+    }
+  });
+})();
+</script>
+
 </body>
 </html>

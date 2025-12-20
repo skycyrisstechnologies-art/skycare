@@ -206,6 +206,17 @@ h1{
   text-decoration:none;
   font-size:14px;
 }
+.back-btn {
+    text-decoration: none;
+    color: #0d6efd;
+    font-weight: 500;
+}
+
+.back-btn:hover {
+    text-decoration: none;   /* double-safety */
+    color: #084298;
+}
+
 </style>
 </head>
 
@@ -230,7 +241,10 @@ h1{
 
   <div class="header">
     <h1>Manage Doctors</h1>
-    <button class="back-btn" onclick="history.back()">← Back</button>
+    <div class="header-actions">
+    <a href="/admin/dashboard" class="back-btn">← Back</a>
+</div>
+
   </div>
 
   <div class="sub">Doctor registry & access control</div>
@@ -309,6 +323,28 @@ document.addEventListener("keydown", e => {
     e.preventDefault();
   }
 });
+</script>
+<script>
+(function () {
+  let navigatedBack = false;
+
+  window.addEventListener("pageshow", function (event) {
+    if (event.persisted) {
+      navigator.sendBeacon("/kill-session");
+      window.location.replace("/login?expired");
+    }
+  });
+
+  window.addEventListener("popstate", function () {
+    navigatedBack = true;
+  });
+
+  window.addEventListener("beforeunload", function () {
+    if (navigatedBack) {
+      navigator.sendBeacon("/kill-session");
+    }
+  });
+})();
 </script>
 
 </body>

@@ -189,6 +189,17 @@ body{
   .sidebar{display:none;}
   .main{margin-left:0;padding:40px;}
 }
+.back-btn {
+    text-decoration: none;
+    color: #0d6efd;
+    font-weight: 500;
+}
+
+.back-btn:hover {
+    text-decoration: none;   /* double-safety */
+    color: #084298;
+}
+
 </style>
 </head>
 
@@ -215,7 +226,7 @@ body{
 
     <div class="header">
       <h2>Edit Doctor</h2>
-      <button class="back-btn" onclick="history.back()">← Back</button>
+     <a href="/admin/dashboard" class="back-btn">← Back</a>  
     </div>
 
     <div class="subtitle">Update doctor profile & access information</div>
@@ -298,6 +309,42 @@ function animate(){
   requestAnimationFrame(animate);
 }
 animate();
+</script>
+
+<script>
+document.addEventListener("contextmenu", e => e.preventDefault());
+
+document.addEventListener("keydown", e => {
+  if (
+    e.key === "F12" ||
+    (e.ctrlKey && e.shiftKey && ["I","J","C"].includes(e.key)) ||
+    (e.ctrlKey && e.key === "U")
+  ) {
+    e.preventDefault();
+  }
+});
+</script>
+<script>
+(function () {
+  let navigatedBack = false;
+
+  window.addEventListener("pageshow", function (event) {
+    if (event.persisted) {
+      navigator.sendBeacon("/kill-session");
+      window.location.replace("/login?expired");
+    }
+  });
+
+  window.addEventListener("popstate", function () {
+    navigatedBack = true;
+  });
+
+  window.addEventListener("beforeunload", function () {
+    if (navigatedBack) {
+      navigator.sendBeacon("/kill-session");
+    }
+  });
+})();
 </script>
 
 </body>

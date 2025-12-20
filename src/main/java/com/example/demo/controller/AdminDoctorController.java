@@ -50,5 +50,9 @@ public class AdminDoctorController {
         doctorService.deleteDoctor(id);
         return "redirect:/admin/doctors";
     }
+       @GetMapping("/add-doctor")
+    public String addDoctor() {
+        return "admin-add-doctor";
+    }
 }
 

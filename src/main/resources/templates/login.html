@@ -322,5 +322,20 @@ document.addEventListener("keydown", e => {
 });
 </script>
 
+<script>
+let internalNav = false;
+
+document.querySelectorAll("a, button").forEach(el => {
+  el.addEventListener("click", () => internalNav = true);
+});
+
+window.addEventListener("beforeunload", function () {
+  if (!internalNav) {
+    navigator.sendBeacon("/session-expire");
+  }
+});
+</script>
+
+
 </body>
 </html>
