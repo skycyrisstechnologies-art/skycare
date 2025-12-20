@@ -3,6 +3,9 @@ package com.example.demo.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import org.hibernate.annotations.CreationTimestamp;
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "patients")
 @Getter
@@ -26,4 +29,8 @@ public class Patient {
 
     @Column(name = "assigned_doctor_code")
     private String assignedDoctorCode;
+
+    @CreationTimestamp
+    @Column(name = "created_date", updatable = false)
+    private LocalDateTime createdDate;
 }

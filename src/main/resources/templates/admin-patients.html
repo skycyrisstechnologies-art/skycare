@@ -22,11 +22,6 @@
   font-family:"Inter","Segoe UI",system-ui,sans-serif;
 }
 
-html, body{
-  height:100%;
-  overflow-y:auto;
-}
-
 body{
   background:
     radial-gradient(circle at 50% 35%,
@@ -37,6 +32,7 @@ body{
   color:var(--ink);
 }
 
+/* BACKGROUND ANIMATION */
 #ambient{
   position:fixed;
   inset:0;
@@ -94,13 +90,7 @@ body{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  margin-bottom:40px;
-}
-
-.header-left{
-  display:flex;
-  align-items:center;
-  gap:18px;
+  margin-bottom:30px;
 }
 
 .header h1{
@@ -108,86 +98,79 @@ body{
 }
 
 .header span{
-  font-size:15px;
   color:#4c6f86;
 }
 
-/* BACK BUTTON */
-.back-btn{
-  border:none;
-  padding:10px 22px;
-  border-radius:18px;
-  font-size:14px;
-  font-weight:600;
-  color:#0a2540;
-  cursor:pointer;
-  background:linear-gradient(180deg,rgba(255,255,255,.95),rgba(255,255,255,.65));
-  backdrop-filter:blur(18px);
-  box-shadow:
-    0 14px 36px rgba(11,63,143,.25),
-    inset 0 0 0 1px rgba(255,255,255,.7);
-  transition:.3s ease;
-}
-
-.back-btn:hover{
-  transform:translateY(-2px);
-  box-shadow:
-    0 26px 60px rgba(11,63,143,.35),
-    inset 0 0 0 1px rgba(255,255,255,.85);
-}
-
-.add-btn{
-  background:linear-gradient(135deg,#6fd3ff,#3b82c4);
-  color:white;
-  padding:14px 26px;
-  border-radius:20px;
-  text-decoration:none;
-  font-weight:600;
-}
-
-/* RIGHT ACTIONS */
+/* ACTION BUTTONS */
 .header-actions{
   display:flex;
-  align-items:center;
   gap:14px;
+}
+
+.action-btn{
+  padding:12px 22px;
+  border-radius:18px;
+  border:none;
+  cursor:pointer;
+  font-weight:600;
+}
+
+.back{ background:#fff; }
+.filter{ background:#fff; }
+.add{ background:linear-gradient(135deg,#6fd3ff,#3b82c4); color:white; }
+
+/* FILTER INPUT */
+#filterBox{
+  display:none;
+  margin-bottom:20px;
+}
+
+#filterInput{
+  width:100%;
+  padding:14px 18px;
+  border-radius:18px;
+  border:none;
+  box-shadow:0 10px 30px rgba(0,0,0,.15);
+  font-size:15px;
 }
 
 /* PANEL */
 .panel{
-  padding:36px;
+  padding:40px;
   border-radius:36px;
-  background:rgba(255,255,255,0.55);
+  background:rgba(255,255,255,0.6);
   backdrop-filter:blur(30px);
 }
 
-/* GRID TABLE */
+/* GRID — FIXED ALIGNMENT */
 .grid-header,
 .grid-row{
   display:grid;
   grid-template-columns:
-    1.2fr
-    0.6fr
-    0.9fr
-    1.4fr
-    1.2fr
-    1fr
-    1.3fr;
+    1.6fr   /* Name */
+    0.6fr   /* Age */
+    0.8fr   /* Gender */
+    1.4fr   /* Phone */
+    1.2fr   /* Disease */
+    1fr     /* Doctor */
+    1fr     /* Date */
+    1.2fr;  /* Actions */
   align-items:center;
-  column-gap:18px;
+  gap:16px;
 }
 
 .grid-header{
-  padding:0 22px 16px;
+  padding:0 20px 18px;
   font-weight:600;
   color:#5c7d94;
 }
 
 .grid-row{
   background:white;
-  border-radius:22px;
-  padding:18px 22px;
-  margin-bottom:16px;
-  box-shadow:0 16px 40px rgba(0,0,0,0.1);
+  border-radius:26px;
+  padding:22px 20px;
+  margin-bottom:20px;
+  box-shadow:0 18px 40px rgba(0,0,0,.12);
 }
 
 /* ACTIONS */
@@ -199,8 +182,8 @@ body{
 .edit{
   background:#4fc3ff;
   color:white;
-  padding:8px 16px;
-  border-radius:14px;
+  padding:10px 18px;
+  border-radius:16px;
   text-decoration:none;
   font-weight:600;
 }
@@ -208,8 +191,8 @@ body{
 .delete{
   background:#ff5c5c;
   color:white;
-  padding:8px 16px;
-  border-radius:14px;
+  padding:10px 18px;
+  border-radius:16px;
   text-decoration:none;
   font-weight:600;
 }
@@ -240,34 +223,35 @@ body{
     </div>
 
     <div class="header-actions">
-      <button class="back-btn" onclick="history.back()">← Back</button>
-      <a class="add-btn" th:href="@{/admin/patients/add}">+ Add Patient</a>
+      <button class="action-btn back" onclick="history.back()">← Back</button>
+      <button class="action-btn filter" onclick="toggleFilter()">🔍 Filter</button>
+      <a class="action-btn add" th:href="@{/admin/patients/add}">+ Add Patient</a>
     </div>
+  </div>
+
+  <!-- FILTER -->
+  <div id="filterBox">
+    <input id="filterInput" placeholder="Filter by anything..." onkeyup="filterPatients()"/>
   </div>
 
   <div class="panel">
 
     <div class="grid-header">
-      <div>Name</div>
-      <div>Age</div>
-      <div>Gender</div>
-      <div>Phone</div>
-      <div>Disease</div>
-      <div>Assigned Doctor</div>
-      <div></div>
+      <div>Name</div><div>Age</div><div>Gender</div><div>Phone</div>
+      <div>Disease</div><div>Doctor</div><div>Date</div><div></div>
     </div>
 
     <div class="grid-row" th:each="p : ${patients}">
-      <div th:text="${p.name}">Name</div>
-      <div th:text="${p.age}">Age</div>
-      <div th:text="${p.gender}">Gender</div>
-      <div th:text="${p.phone}">Phone</div>
-      <div th:text="${p.disease}">Disease</div>
-      <div th:text="${p.assignedDoctorCode}">DOC</div>
+      <div th:text="${p.name}"></div>
+      <div th:text="${p.age}"></div>
+      <div th:text="${p.gender}"></div>
+      <div th:text="${p.phone}"></div>
+      <div th:text="${p.disease}"></div>
+      <div th:text="${p.assignedDoctorCode}"></div>
+      <div th:text="${#temporals.format(p.createdDate,'dd-MM-yyyy')}"></div>
       <div class="actions">
         <a class="edit" th:href="@{'/admin/patients/edit/' + ${p.id}}">Edit</a>
-        <a class="delete"
-           th:href="@{'/admin/patients/delete/' + ${p.id}}"
+        <a class="delete" th:href="@{'/admin/patients/delete/' + ${p.id}}"
            onclick="return confirm('Delete patient?')">Delete</a>
       </div>
     </div>
@@ -275,12 +259,13 @@ body{
   </div>
 </div>
 
+<!-- ANIMATION (UNCHANGED) -->
 <script>
 const c=document.getElementById("ambient"),ctx=c.getContext("2d");
 function resize(){c.width=innerWidth;c.height=innerHeight}
 resize();window.addEventListener("resize",resize);
 
-const dots=[...Array(140)].map(() => ({
+const dots=[...Array(140)].map(()=>({
   x:Math.random()*c.width,
   y:Math.random()*c.height,
   r:Math.random()*2.5+1,
@@ -291,8 +276,7 @@ const dots=[...Array(140)].map(() => ({
 (function anim(){
   ctx.clearRect(0,0,c.width,c.height);
   dots.forEach(d=>{
-    d.y-=d.v;
-    if(d.y<0) d.y=c.height;
+    d.y-=d.v; if(d.y<0)d.y=c.height;
     ctx.beginPath();
     ctx.arc(d.x,d.y,d.r,0,Math.PI*2);
     ctx.fillStyle=`rgba(140,210,255,${d.o})`;
@@ -302,18 +286,18 @@ const dots=[...Array(140)].map(() => ({
 })();
 </script>
 
+<!-- FILTER SCRIPT -->
 <script>
-document.addEventListener("contextmenu", e => e.preventDefault());
-
-document.addEventListener("keydown", e => {
-  if (
-    e.key === "F12" ||
-    (e.ctrlKey && e.shiftKey && ["I","J","C"].includes(e.key)) ||
-    (e.ctrlKey && e.key === "U")
-  ) {
-    e.preventDefault();
-  }
-});
+function toggleFilter(){
+  const f=document.getElementById("filterBox");
+  f.style.display=f.style.display==="block"?"none":"block";
+}
+function filterPatients(){
+  const v=document.getElementById("filterInput").value.toLowerCase();
+  document.querySelectorAll(".grid-row").forEach(r=>{
+    r.style.display=r.innerText.toLowerCase().includes(v)?"grid":"none";
+  });
+}
 </script>
 
 </body>
