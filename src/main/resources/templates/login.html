@@ -137,6 +137,16 @@ canvas{
   color:#5a7f95;
   opacity:0.85;
 }
+.footer-text a{
+  color: inherit;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.footer-text a:hover{
+  text-decoration: underline;
+}
+
 </style>
 </head>
 
@@ -180,7 +190,13 @@ canvas{
     </div>
   </form>
 
-  <div class="footer-text">© Powered by SkyCyriss</div>
+  <div class="footer-text">
+  © Powered by 
+  <a href="https://skycyriss.com/" target="_blank" rel="noopener noreferrer">
+    SkyCyriss
+  </a>
+</div>
+
 </div>
 
 <script>
@@ -322,19 +338,7 @@ document.addEventListener("keydown", e => {
 });
 </script>
 
-<script>
-let internalNav = false;
 
-document.querySelectorAll("a, button").forEach(el => {
-  el.addEventListener("click", () => internalNav = true);
-});
-
-window.addEventListener("beforeunload", function () {
-  if (!internalNav) {
-    navigator.sendBeacon("/session-expire");
-  }
-});
-</script>
 
 
 </body>

@@ -79,6 +79,13 @@ public class DoctorController {
             return "redirect:/doctor/patients";
         }
 
+        // ===== REQUIRED FOR PATIENT TABS =====
+        String doctorCode = doctorService.getDoctorCodeForLoggedIn();
+        List<Patient> patients =
+                patientService.getPatientsByDoctorCode(doctorCode);
+        model.addAttribute("patients", patients);
+        // ====================================
+
         model.addAttribute("patient", patient);
         model.addAttribute("notes",
                 visitNoteService.getNotesByPatient(id));

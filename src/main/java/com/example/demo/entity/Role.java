@@ -8,7 +8,6 @@ import lombok.*;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 public class Role {
 
     @Id
@@ -18,7 +17,6 @@ public class Role {
     @Column(nullable = false, unique = true)
     private String name;
 
-    // Required for DataInitializer
     public Role(String name) {
         this.name = name;
     }

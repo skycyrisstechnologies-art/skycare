@@ -1,261 +1,412 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
 <meta charset="UTF-8">
-<title>SkyCare | Select Portal</title>
+<title>SkyCare | Hospital Management System</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- Font Awesome Icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
 <style>
 :root{
-  --bg1:#071d33;
-  --bg2:#0b2f52;
-  --cyan:#5aa7da;
-  --blue:#0e4f9a;
-  --violet:#a9d3f2;
-  --glass:rgba(255,255,255,0.10);
+  --skycyriss-dark:#08356F;
+  --skycyriss-accent:#2F80ED;
+  --nav-dark:#1F2937;
+  --white:#ffffff;
+  --bg:#f4f7f9;
 }
 
 *{
   margin:0;
   padding:0;
   box-sizing:border-box;
-  font-family:"Inter","Segoe UI",system-ui,sans-serif;
+  font-family:"Segoe UI","Inter",system-ui,sans-serif;
 }
 
 body{
-  height:100vh;
-  background:
-    radial-gradient(circle at 50% 30%, #0b2a3d, var(--bg1) 70%);
-  overflow:hidden;
+  background:var(--bg);
+  color:#1f2937;
+}
+
+/* ================= TOP BAR ================= */
+.top-bar{
+  background:var(--skycyriss-dark);
+  color:var(--white);
+  padding:14px 40px;
   display:flex;
   align-items:center;
-  justify-content:center;
-  perspective:1600px;
-  color:white;
+  justify-content:space-between;
 }
 
-/* ================= ENERGY BACKGROUND ================= */
-canvas{
-  position:absolute;
-  inset:0;
-  z-index:0;
+/* LOGO */
+.logo-text{
+  font-size:32px;
+  font-weight:700;
+  letter-spacing:.4px;
 }
 
-/* ================= MAIN WRAPPER ================= */
-.scene{
-  position:relative;
-  z-index:10;
-  text-align:center;
+.logo-text span{
+  color:var(--skycyriss-accent);
 }
 
-.brand{
-  font-family:"Brush Script MT","Segoe Script",cursive;
-  font-size:64px;
-  color:var(--cyan);
-  text-shadow:
-    0 0 40px rgba(107,231,255,0.6),
-    0 0 90px rgba(107,231,255,0.35);
-}
-
-.subtitle{
-  margin-top:10px;
-  margin-bottom:60px;
-  font-size:16px;
-  color:#b8e9ff;
-  opacity:0.9;
-}
-
-/* ================= 3D PORTALS ================= */
-.portals{
+/* TOP ICONS */
+.top-icons{
   display:flex;
-  gap:48px;
+  gap:22px;
+  align-items:center;
 }
 
-/* CARD */
-.portal{
-  width:280px;
-  height:360px;
-  border-radius:28px;
-  background:
-    linear-gradient(180deg,
-      rgba(255,255,255,0.18),
-      rgba(255,255,255,0.03));
-  backdrop-filter: blur(25px);
-  box-shadow:
-    0 60px 140px rgba(0,0,0,0.75),
-    inset 0 0 0 1px rgba(255,255,255,0.25);
-  transform-style:preserve-3d;
-  transition:transform .25s ease;
-  cursor:pointer;
+.top-icons a{
+  color:white;
+  font-size:15px;
+  text-decoration:none;
+  transition:.2s;
+}
+
+.top-icons a:hover{
+  color:var(--skycyriss-accent);
+}
+
+/* ================= SIGN IN DROPDOWN ================= */
+.signin-dropdown{
   position:relative;
-  overflow:hidden;
 }
 
-/* GLOW EDGE */
-.portal::before{
+.signin-btn{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  cursor:pointer;
+}
+
+.signin-menu{
+  position:absolute;
+  top:36px;
+  right:0;
+  background:white;
+  min-width:180px;
+  border-radius:6px;
+  box-shadow:0 12px 30px rgba(0,0,0,.2);
+  opacity:0;
+  visibility:hidden;
+  transform:translateY(10px);
+  transition:.25s ease;
+  z-index:1000;
+}
+
+.signin-menu a{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:12px 16px;
+  font-size:14px;
+  color:#1f2937;
+  border-bottom:1px solid #eef2f7;
+}
+
+.signin-menu a:last-child{
+  border-bottom:none;
+}
+
+.signin-menu a:hover{
+  background:#f4f7f9;
+  color:var(--skycyriss-dark);
+}
+
+.signin-dropdown:hover .signin-menu{
+  opacity:1;
+  visibility:visible;
+  transform:translateY(0);
+}
+
+/* ================= NAV BAR ================= */
+.navbar{
+  background:var(--nav-dark);
+  padding:0 40px;
+}
+
+.navbar ul{
+  list-style:none;
+  display:flex;
+  align-items:center;
+  gap:38px;
+  height:56px;
+}
+
+.navbar li{
+  position:relative;
+}
+
+.navbar a{
+  color:#e5eef7;
+  text-decoration:none;
+  font-size:15px;
+  font-weight:500;
+  position:relative;
+  padding:6px 0;
+}
+
+.navbar a::after{
   content:"";
   position:absolute;
-  inset:-1px;
-  border-radius:inherit;
-  background:
-    linear-gradient(120deg, transparent, var(--cyan), transparent);
-  opacity:0.25;
+  left:0;
+  bottom:-6px;
+  width:0;
+  height:3px;
+  background:var(--skycyriss-accent);
+  transition:.25s;
 }
 
-/* INNER CONTENT */
-.portal-inner{
+.navbar a:hover::after{
+  width:100%;
+}
+
+/* ===== ADDED NAV DROPDOWNS ===== */
+.nav-dropdown{
   position:absolute;
-  inset:0;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  transform:translateZ(50px);
+  top:100%;
+  left:0;
+  background:#fff7f1;
+  padding:22px 32px;
+  display:grid;
+  grid-template-columns:repeat(2, 260px);
+  gap:14px 60px;
+  opacity:0;
+  visibility:hidden;
+  z-index:999;
 }
 
-/* ICON */
-.icon{
-  width:90px;
-  height:90px;
-  border-radius:50%;
+.navbar li:hover .nav-dropdown{
+  opacity:1;
+  visibility:visible;
+}
+
+.nav-dropdown a{
+  color:#08356F;
+  font-size:15px;
+  text-decoration:none;
+}
+
+.nav-dropdown a:hover{
+  text-decoration:underline;
+}
+.nav-dropdown{
+  pointer-events: auto;
+  z-index: 9999;
+}
+
+.navbar li > a{
+  pointer-events: auto;
+}
+.nav-dropdown{
+  pointer-events: auto;
+  z-index: 9999;
+}
+
+.navbar li > a{
+  pointer-events: auto;
+}
+
+
+/* ================= HERO ================= */
+.hero{
   background:
-    radial-gradient(circle at 30% 30%, white, var(--cyan));
-  box-shadow:
-    0 0 40px rgba(107,231,255,0.9),
-    0 0 90px rgba(107,231,255,0.45);
+    linear-gradient(rgba(0,0,0,.55),rgba(0,0,0,.55)),
+    url("https://images.unsplash.com/photo-1586773860418-d37222d8fce3?q=80&w=1600")
+    center/cover no-repeat;
+  height:70vh;
   display:flex;
   align-items:center;
   justify-content:center;
-  font-size:36px;
-  color:#00263a;
-  margin-bottom:28px;
+  text-align:center;
+  color:white;
+  padding:0 20px;
 }
 
-/* TITLE */
-.portal h3{
-  font-size:24px;
-  margin-bottom:10px;
+.hero h1{
+  font-size:42px;
+  margin-bottom:14px;
 }
 
-/* TEXT */
-.portal p{
-  font-size:14px;
-  opacity:0.85;
-  width:80%;
+.hero p{
+  max-width:850px;
+  font-size:16px;
+  line-height:1.7;
 }
 
-/* HOVER FLOAT */
-.portal:hover{
-  transform:translateY(-18px) scale(1.03);
+/* ================= ABOUT ================= */
+.about{
+  background:#ffffff;
+  padding:80px 50px;
 }
 
-/* DIFFERENT COLOR THEMES */
-.admin{ --cyan:#0e4f9a; }
-.doctor{ --cyan:#5aa7da; }
-.staff{ --cyan:#a9d3f2; }
+.about h2{
+  text-align:center;
+  font-size:32px;
+  margin-bottom:25px;
+  color:var(--skycyriss-dark);
+}
+
+.about p{
+  max-width:1000px;
+  margin:0 auto 15px;
+  line-height:1.9;
+  font-size:15px;
+  color:#374151;
+}
 
 /* ================= FOOTER ================= */
 .footer{
-  margin-top:70px;
+  background:var(--nav-dark);
+  color:#dce6ea;
+  text-align:center;
+  padding:20px;
   font-size:13px;
-  opacity:0.6;
 }
 
-/* ================= MOBILE ================= */
+/* ================= RESPONSIVE ================= */
 @media(max-width:900px){
-  .portals{
-    flex-direction:column;
+  .navbar ul{
+    flex-wrap:wrap;
+    height:auto;
+    padding:12px 0;
   }
+  .hero h1{font-size:30px;}
+  .about{padding:60px 25px;}
 }
 </style>
 </head>
 
 <body>
 
-<canvas id="bg"></canvas>
-
-<div class="scene">
-  <div class="brand">SkyCare</div>
-  <div class="subtitle">Choose your gateway into the Hospital management System</div>
-
-  <div class="portals">
-
-    <div class="portal admin" onclick="go('ADMIN')">
-      <div class="portal-inner">
-        <div class="icon">⚙</div>
-        <h3>Admin Portal</h3>
-        <p>System control, analytics & hospital operations</p>
-      </div>
-    </div>
-
-    <div class="portal doctor" onclick="go('DOCTOR')">
-      <div class="portal-inner">
-        <div class="icon">🩺</div>
-        <h3>Doctor Portal</h3>
-        <p>Patients, diagnosis, prescriptions</p>
-      </div>
-    </div>
-
-    <div class="portal staff" onclick="go('STAFF')">
-      <div class="portal-inner">
-        <div class="icon">🏥</div>
-        <h3>Staff Portal</h3>
-        <p>Care coordination & daily operations</p>
-      </div>
-    </div>
-
+<!-- ================= TOP BAR ================= -->
+<div class="top-bar">
+  <div class="logo-text">
+    Sky<span>Care</span>
   </div>
 
-  <div class="footer">© Powered by SkyCyriss</div>
+  <div class="top-icons">
+
+    <!-- SIGN IN -->
+    <div class="signin-dropdown">
+      <a class="signin-btn">
+        <i class="fa-solid fa-user-lock"></i> Sign In
+      </a>
+
+      <div class="signin-menu">
+        <a href="/login?role=ADMIN"><i class="fa-solid fa-user-shield"></i> Admin</a>
+        <a href="/login?role=DOCTOR"><i class="fa-solid fa-user-doctor"></i> Doctor</a>
+        <a href="/login?role=STAFF"><i class="fa-solid fa-users"></i> Staff</a>
+      </div>
+    </div>
+
+    <!-- ✅ ADDED: PATIENT REGISTRATION -->
+   <a th:href="@{/patient/register}">
+    <i class="fa-solid fa-user-plus"></i> Patient Registration
+</a>
+
+
+    <a href="mailto:info@skycare.com"><i class="fa-solid fa-envelope"></i></a>
+    <a href="tel:+918836699999"><i class="fa-solid fa-phone"></i></a>
+    <a href="https://www.linkedin.com/company/skycyriss-technologies" target="_blank">
+      <i class="fa-brands fa-linkedin-in"></i>
+    </a>
+
+  </div>
 </div>
 
-<script>
-/* ================= 3D TILT ================= */
-document.querySelectorAll(".portal").forEach(card=>{
-  card.addEventListener("mousemove",e=>{
-    const r=card.getBoundingClientRect();
-    const x=e.clientX-r.left;
-    const y=e.clientY-r.top;
-    const rx=(y/r.height-0.5)*-18;
-    const ry=(x/r.width-0.5)*18;
-    card.style.transform=`rotateX(${rx}deg) rotateY(${ry}deg) translateY(-18px)`;
-  });
-  card.addEventListener("mouseleave",()=>{
-    card.style.transform="";
-  });
-});
+<!-- ================= NAV BAR ================= -->
+<div class="navbar">
+  <ul>
+    <li><a href="#">Discover SkyCare</a></li>
 
-function go(role){
-  window.location.href = "/login?role=" + role;
-}
+        <!-- ✅ FIND HOSPITAL (ONLY THIS PART CHANGED) -->
+    <li>
+      <a href="javascript:void(0)">Find Hospital</a>
 
-/* ================= ENERGY PARTICLES ================= */
-const c=document.getElementById("bg");
-const ctx=c.getContext("2d");
-c.width=innerWidth; c.height=innerHeight;
+      <div class="nav-dropdown">
+        <a href="https://www.google.com/maps/search/?api=1&query=Hyderabad" target="_blank">Hyderabad</a>
+        <a href="https://www.google.com/maps/search/?api=1&query=Warangal" target="_blank">Warangal</a>
+        <a href="https://www.google.com/maps/search/?api=1&query=Nizamabad" target="_blank">Nizamabad</a>
+        <a href="https://www.google.com/maps/search/?api=1&query=Karimnagar" target="_blank">Karimnagar</a>
+        <a href="https://www.google.com/maps/search/?api=1&query=Khammam" target="_blank">Khammam</a>
+        <a href="https://www.google.com/maps/search/?api=1&query=Mahabubnagar" target="_blank">Mahabubnagar</a>
+        <a href="https://www.google.com/maps/search/?api=1&query=Vijayawada" target="_blank">Vijayawada</a>
+        <a href="https://www.google.com/maps/search/?api=1&query=Guntur" target="_blank">Guntur</a>
+        <a href="https://www.google.com/maps/search/?api=1&query=Nellore" target="_blank">Nellore</a>
+        <a href="https://www.google.com/maps/search/?api=1&query=Tirupati" target="_blank">Tirupati</a>
+        <a href="https://www.google.com/maps/search/?api=1&query=Kurnool" target="_blank">Kurnool</a>
+        <a href="https://www.google.com/maps/search/?api=1&query=Anantapur" target="_blank">Anantapur</a>
+        <a href="https://www.google.com/maps/search/?api=1&query=Visakhapatnam" target="_blank">Visakhapatnam</a>
+        <a href="https://www.google.com/maps/search/?api=1&query=Rajahmundry" target="_blank">Rajahmundry</a>
+        <a href="https://www.google.com/maps/search/?api=1&query=Kakinada" target="_blank">Kakinada</a>
+      </div>
+    </li>
 
-const dots=[...Array(120)].map(() => ({
-  x:Math.random()*c.width,
-  y:Math.random()*c.height,
-  v:Math.random()*0.5+0.2
-}));
+    <li>
+      <a href="#">Medical Services</a>
+      <div class="nav-dropdown">
+        <a>Cardiac Sciences</a><a>Obstetrics & Gynaecology</a>
+        <a>Oncology</a><a>Internal Medicine</a>
+        <a>Neurosciences</a><a>Vascular Surgery</a>
+        <a>Gastroenterology</a><a>Paediatrics</a>
+        <a>Orthopaedics</a><a>Cosmetology</a>
+        <a>Urology</a><a>Emergency Medicine</a>
+        <a>Organ Transplantation</a><a>Preventive Medicine</a>
+        <a>Pulmonology</a><a>Interventional Radiology</a>
+      </div>
+    </li>
 
-function draw(){
-  ctx.clearRect(0,0,c.width,c.height);
-  dots.forEach(d=>{
-    d.y-=d.v;
-    if(d.y<0) d.y=c.height;
-    ctx.fillStyle="rgba(107,231,255,0.12)";
-    ctx.beginPath();
-    ctx.arc(d.x,d.y,2,0,Math.PI*2);
-    ctx.fill();
-  });
-  requestAnimationFrame(draw);
-}
-draw();
+    <li>
+      <a href="#">Health Library</a>
+      <div class="nav-dropdown">
+        <a>Amyotrophic Lateral Sclerosis (ALS)</a><a>Epilepsy</a>
+        <a>Bone Marrow Transplant</a><a>Hypertension</a>
+        <a>Brain Cancer</a><a>IBS</a>
+        <a>Breast Cancer</a><a>Kidney Stones</a>
+        <a>CKD</a><a>Leukemia</a>
+        <a>Colorectal Cancer</a><a>Liver Cirrhosis</a>
+        <a>CAD</a><a>Osteoarthritis</a>
+        <a>Diabetes</a><a>PCOD / PCOS</a>
+      </div>
+    </li>
+  </ul>
+</div>
 
-onresize=()=>{ c.width=innerWidth; c.height=innerHeight; };
-</script>
+<!-- ================= HERO ================= -->
+<div class="hero">
+  <div>
+    <h1>SkyCare Hospital Management System</h1>
+    <p>
+      A secure, scalable hospital management platform built by SkyCyriss Technologies
+      to unify administration, doctors, and staff into one intelligent healthcare ecosystem.
+    </p>
+  </div>
+</div>
+
+<!-- ================= ABOUT ================= -->
+<div class="about">
+  <h2>About SkyCare</h2>
+  <p>
+    SkyCare is a modern Hospital Management System designed to digitize and streamline
+    hospital operations through secure, role-based access.
+  </p>
+  <p>
+    It integrates patient records, appointments, billing, diagnostics, pharmacy,
+    and admissions into a single centralized platform.
+  </p>
+  <p>
+    Built for performance and reliability, SkyCare enables hospitals to deliver
+    faster, safer, and more efficient patient care.
+  </p>
+</div>
+
+<!-- ================= FOOTER ================= -->
+<div class="footer">
+  © 2025 SkyCare • Powered by SkyCyriss Technologies
+</div>
 
 </body>
 </html>

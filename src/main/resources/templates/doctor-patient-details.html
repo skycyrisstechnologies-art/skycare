@@ -111,7 +111,7 @@ body{
 .table{margin-bottom:0;}
 .badge{font-size:12px;}
 
-/* ===== FANCY BACK BUTTON ===== */
+/* ===== BACK BUTTON ===== */
 .back-btn{
   border:none;
   padding:10px 20px;
@@ -126,31 +126,57 @@ body{
     0 14px 34px rgba(31,79,115,.25),
     inset 0 0 0 1px rgba(255,255,255,.65);
   transition:.3s ease;
+  text-decoration:none;
 }
 
 .back-btn:hover{
   transform:translateY(-2px);
-  box-shadow:
-    0 24px 60px rgba(31,79,115,.35),
-    inset 0 0 0 1px rgba(255,255,255,.8);
-}
-.back-btn {
-    text-decoration: none;
-    color: #0d6efd;
-    font-weight: 500;
 }
 
-.back-btn:hover {
-    text-decoration: none;   /* double-safety */
-    color: #084298;
+/* ================= REQUIRED ADDITION ================= */
+/* ===== PATIENT TABS ===== */
+.patient-tabs{
+  margin-bottom:24px;
 }
 
+.patient-tabs .tabs{
+  display:flex;
+  gap:12px;
+  overflow-x:auto;
+  padding-bottom:6px;
+}
+
+.patient-tabs a{
+  padding:10px 18px;
+  border-radius:20px;
+  text-decoration:none;
+  font-weight:500;
+  white-space:nowrap;
+  color:var(--ink);
+  background:rgba(255,255,255,0.45);
+  backdrop-filter:blur(12px);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,0.5);
+  transition:.25s ease;
+}
+
+.patient-tabs a:hover{
+  background:rgba(255,255,255,0.7);
+}
+
+.patient-tabs a.active{
+  background:linear-gradient(180deg,#0f5299,#0b3558);
+  color:white;
+  box-shadow:0 10px 28px rgba(11,53,88,0.45);
+}
+
+.patient-tabs .tabs::-webkit-scrollbar{
+  display:none;
+}
 </style>
 </head>
 
 <body>
 
-<!-- BACKGROUND -->
 <canvas id="ambient"></canvas>
 
 <!-- SIDEBAR -->
@@ -164,11 +190,23 @@ body{
 <!-- CONTENT -->
 <div class="content">
 
+<!-- ================= REQUIRED ADDITION ================= -->
+<!-- PATIENT TABS -->
+<div class="patient-tabs">
+  <div class="tabs">
+    <a th:each="p : ${patients}"
+       th:href="@{/doctor/patient/{id}(id=${p.id})}"
+       th:text="${p.name}"
+       th:classappend="${p.id == patient.id} ? 'active' : ''">
+    </a>
+  </div>
+</div>
+
 <!-- BASIC INFO -->
 <div class="card card-section p-4">
   <div class="d-flex justify-content-between align-items-center mb-3">
     <h3 th:text="${patient.name}">Patient Name</h3>
-   <a href="/doctor/dashboard" class="back-btn">← Back</a>
+    <a href="/doctor/dashboard" class="back-btn">← Back</a>
   </div>
 
   <div class="row">
@@ -277,53 +315,23 @@ body{
 
 </div>
 
-<!-- BACKGROUND DOTS SCRIPT -->
+<!-- BACKGROUND SCRIPT -->
 <script>
 const canvas=document.getElementById("ambient");
 const ctx=canvas.getContext("2d");
-
-function resize(){
-  canvas.width=innerWidth;
-  canvas.height=innerHeight;
-}
-resize();
-onresize=resize;
-
-const dots=[...Array(140)].map(() => ({
-  x:Math.random()*canvas.width,
-  y:Math.random()*canvas.height,
-  r:Math.random()*2.5+1,
-  v:Math.random()*0.4+0.15,
-  o:Math.random()*0.35+0.2
-}));
-
+function resize(){canvas.width=innerWidth;canvas.height=innerHeight;}
+resize();onresize=resize;
+const dots=[...Array(140)].map(()=>({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:Math.random()*2.5+1,v:Math.random()*0.4+0.15,o:Math.random()*0.35+0.2}));
 function animate(){
   ctx.clearRect(0,0,canvas.width,canvas.height);
   dots.forEach(d=>{
-    d.y-=d.v;
-    if(d.y<-10) d.y=canvas.height+10;
-    ctx.beginPath();
-    ctx.arc(d.x,d.y,d.r,0,Math.PI*2);
-    ctx.fillStyle=`rgba(255,255,255,${d.o})`;
-    ctx.fill();
+    d.y-=d.v;if(d.y<-10)d.y=canvas.height+10;
+    ctx.beginPath();ctx.arc(d.x,d.y,d.r,0,Math.PI*2);
+    ctx.fillStyle=`rgba(255,255,255,${d.o})`;ctx.fill();
   });
   requestAnimationFrame(animate);
 }
 animate();
-</script>
-
-<script>
-document.addEventListener("contextmenu", e => e.preventDefault());
-
-document.addEventListener("keydown", e => {
-  if (
-    e.key === "F12" ||
-    (e.ctrlKey && e.shiftKey && ["I","J","C"].includes(e.key)) ||
-    (e.ctrlKey && e.key === "U")
-  ) {
-    e.preventDefault();
-  }
-});
 </script>
 <script>
 (function () {
@@ -347,7 +355,6 @@ document.addEventListener("keydown", e => {
   });
 })();
 </script>
-
 
 </body>
 </html>
