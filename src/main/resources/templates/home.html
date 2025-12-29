@@ -1,14 +1,10 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>SkyCare | Hospital Management System</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<!-- Font Awesome Icons -->
+<title>SkyCare | Futuristic Chatbot</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-
 <style>
 :root{
   --skycyriss-dark:#08356F;
@@ -16,6 +12,8 @@
   --nav-dark:#1F2937;
   --white:#ffffff;
   --bg:#f4f7f9;
+  --glow:#00d4ff;
+  --purple:#a855f7;
 }
 
 *{
@@ -40,7 +38,6 @@ body{
   justify-content:space-between;
 }
 
-/* LOGO */
 .logo-text{
   font-size:32px;
   font-weight:700;
@@ -51,7 +48,6 @@ body{
   color:var(--skycyriss-accent);
 }
 
-/* TOP ICONS */
 .top-icons{
   display:flex;
   gap:22px;
@@ -69,7 +65,6 @@ body{
   color:var(--skycyriss-accent);
 }
 
-/* ================= SIGN IN DROPDOWN ================= */
 .signin-dropdown{
   position:relative;
 }
@@ -163,7 +158,6 @@ body{
   width:100%;
 }
 
-/* ===== ADDED NAV DROPDOWNS ===== */
 .nav-dropdown{
   position:absolute;
   top:100%;
@@ -192,23 +186,6 @@ body{
 .nav-dropdown a:hover{
   text-decoration:underline;
 }
-.nav-dropdown{
-  pointer-events: auto;
-  z-index: 9999;
-}
-
-.navbar li > a{
-  pointer-events: auto;
-}
-.nav-dropdown{
-  pointer-events: auto;
-  z-index: 9999;
-}
-
-.navbar li > a{
-  pointer-events: auto;
-}
-
 
 /* ================= HERO ================= */
 .hero{
@@ -266,7 +243,472 @@ body{
   font-size:13px;
 }
 
-/* ================= RESPONSIVE ================= */
+/* ================= FUTURISTIC CHATBOT ================= */
+.chatbot-toggle{
+  position:fixed;
+  bottom:30px;
+  right:30px;
+  width:70px;
+  height:70px;
+  background:linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  z-index:9998;
+  box-shadow:0 8px 32px rgba(102, 126, 234, 0.4);
+  transition:all 0.3s ease;
+  animation:pulse 2s ease-in-out infinite;
+}
+
+.chatbot-toggle:hover{
+  transform:scale(1.1);
+  box-shadow:0 12px 40px rgba(102, 126, 234, 0.6);
+}
+
+.chatbot-toggle i{
+  color:white;
+  font-size:28px;
+}
+
+@keyframes pulse{
+  0%, 100%{
+    box-shadow:0 8px 32px rgba(102, 126, 234, 0.4);
+  }
+  50%{
+    box-shadow:0 8px 32px rgba(102, 126, 234, 0.7), 0 0 0 20px rgba(102, 126, 234, 0);
+  }
+}
+
+.chatbot-container{
+  position:fixed;
+  bottom:30px;
+  right:30px;
+  width:420px;
+  height:85vh;
+  max-height:650px;
+  background:rgba(15, 23, 42, 0.95);
+  backdrop-filter:blur(20px);
+  border-radius:24px;
+  box-shadow:0 20px 60px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.1);
+  display:none;
+  flex-direction:column;
+  z-index:9999;
+  overflow:hidden;
+  border:1px solid rgba(255, 255, 255, 0.1);
+  transform:scale(0.8);
+  opacity:0;
+  transition:all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.chatbot-container.active{
+  display:flex;
+  transform:scale(1);
+  opacity:1;
+}
+
+.chatbot-header{
+  background:linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding:24px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  position:relative;
+  overflow:hidden;
+}
+
+.chatbot-header::before{
+  content:"";
+  position:absolute;
+  top:-50%;
+  left:-50%;
+  width:200%;
+  height:200%;
+  background:radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+  animation:rotate 20s linear infinite;
+}
+
+@keyframes rotate{
+  from{transform:rotate(0deg);}
+  to{transform:rotate(360deg);}
+}
+
+.header-content{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  position:relative;
+  z-index:2;
+}
+
+.bot-avatar{
+  width:50px;
+  height:50px;
+  background:rgba(255, 255, 255, 0.2);
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  position:relative;
+  box-shadow:0 0 20px rgba(0, 212, 255, 0.5);
+}
+
+.bot-avatar::after{
+  content:"";
+  position:absolute;
+  width:100%;
+  height:100%;
+  border-radius:50%;
+  border:2px solid var(--glow);
+  animation:ripple 2s ease-out infinite;
+}
+
+@keyframes ripple{
+  0%{
+    transform:scale(1);
+    opacity:1;
+  }
+  100%{
+    transform:scale(1.5);
+    opacity:0;
+  }
+}
+
+.bot-avatar i{
+  color:white;
+  font-size:24px;
+  animation:float 3s ease-in-out infinite;
+}
+
+@keyframes float{
+  0%, 100%{transform:translateY(0);}
+  50%{transform:translateY(-5px);}
+}
+
+.header-text h3{
+  color:white;
+  font-size:18px;
+  font-weight:700;
+  margin:0;
+  text-shadow:0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.header-text p{
+  color:rgba(255, 255, 255, 0.8);
+  font-size:12px;
+  margin:2px 0 0;
+}
+
+.status-dot{
+  width:8px;
+  height:8px;
+  background:#10b981;
+  border-radius:50%;
+  display:inline-block;
+  margin-right:4px;
+  animation:blink 2s ease-in-out infinite;
+}
+
+@keyframes blink{
+  0%, 100%{opacity:1;}
+  50%{opacity:0.3;}
+}
+
+.close-btn{
+  background:rgba(255, 255, 255, 0.2);
+  border:none;
+  width:36px;
+  height:36px;
+  border-radius:50%;
+  color:white;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  transition:all 0.3s ease;
+  position:relative;
+  z-index:2;
+}
+
+.close-btn:hover{
+  background:rgba(255, 255, 255, 0.3);
+  transform:rotate(90deg);
+}
+
+.chat-body{
+  flex:1;
+  padding:24px;
+  overflow-y:auto;
+  background:linear-gradient(180deg, rgba(15, 23, 42, 0.8) 0%, rgba(30, 41, 59, 0.8) 100%);
+  position:relative;
+}
+
+.chat-body::before{
+  content:"";
+  position:absolute;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:
+    radial-gradient(circle at 20% 30%, rgba(102, 126, 234, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 70%, rgba(168, 85, 247, 0.1) 0%, transparent 50%);
+  pointer-events:none;
+}
+
+.chat-body::-webkit-scrollbar{
+  width:6px;
+}
+
+.chat-body::-webkit-scrollbar-track{
+  background:rgba(255, 255, 255, 0.05);
+  border-radius:10px;
+}
+
+.chat-body::-webkit-scrollbar-thumb{
+  background:rgba(102, 126, 234, 0.5);
+  border-radius:10px;
+}
+
+.chat-body::-webkit-scrollbar-thumb:hover{
+  background:rgba(102, 126, 234, 0.7);
+}
+
+.chat-message{
+  margin-bottom:16px;
+  animation:slideIn 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  position:relative;
+}
+
+@keyframes slideIn{
+  from{
+    opacity:0;
+    transform:translateY(20px);
+  }
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+}
+
+.user-message{
+  display:flex;
+  justify-content:flex-end;
+}
+
+.user-message .message-content{
+  background:linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color:white;
+  padding:14px 18px;
+  border-radius:20px 20px 4px 20px;
+  max-width:75%;
+  font-size:14px;
+  line-height:1.5;
+  box-shadow:0 4px 15px rgba(102, 126, 234, 0.4);
+  word-wrap:break-word;
+}
+
+.bot-message{
+  display:flex;
+  gap:10px;
+  align-items:flex-start;
+}
+
+.bot-icon{
+  width:32px;
+  height:32px;
+  background:linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-shrink:0;
+  box-shadow:0 0 15px rgba(102, 126, 234, 0.5);
+}
+
+.bot-icon i{
+  color:white;
+  font-size:16px;
+}
+
+.bot-message .message-content{
+  background:rgba(255, 255, 255, 0.1);
+  backdrop-filter:blur(10px);
+  border:1px solid rgba(255, 255, 255, 0.15);
+  color:white;
+  padding:14px 18px;
+  border-radius:4px 20px 20px 20px;
+  max-width:75%;
+  font-size:14px;
+  line-height:1.6;
+  box-shadow:0 4px 20px rgba(0, 0, 0, 0.2);
+  word-wrap:break-word;
+}
+
+.typing-indicator{
+  display:none;
+  align-items:center;
+  gap:10px;
+  margin-bottom:16px;
+}
+
+.typing-indicator.active{
+  display:flex;
+}
+
+.typing-indicator .bot-icon{
+  width:32px;
+  height:32px;
+}
+
+.typing-dots{
+  background:rgba(255, 255, 255, 0.1);
+  backdrop-filter:blur(10px);
+  border:1px solid rgba(255, 255, 255, 0.15);
+  padding:14px 18px;
+  border-radius:20px;
+  display:flex;
+  gap:6px;
+}
+
+.typing-dots span{
+  width:8px;
+  height:8px;
+  background:rgba(102, 126, 234, 0.8);
+  border-radius:50%;
+  animation:typing 1.4s ease-in-out infinite;
+}
+
+.typing-dots span:nth-child(2){
+  animation-delay:0.2s;
+}
+
+.typing-dots span:nth-child(3){
+  animation-delay:0.4s;
+}
+
+@keyframes typing{
+  0%, 60%, 100%{
+    transform:translateY(0);
+    opacity:0.5;
+  }
+  30%{
+    transform:translateY(-10px);
+    opacity:1;
+  }
+}
+
+.quick-replies{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-top:12px;
+  padding:0 12px;
+}
+
+.quick-reply-btn{
+  background:rgba(102, 126, 234, 0.2);
+  border:1px solid rgba(102, 126, 234, 0.4);
+  color:white;
+  padding:8px 16px;
+  border-radius:20px;
+  font-size:13px;
+  cursor:pointer;
+  transition:all 0.3s ease;
+}
+
+.quick-reply-btn:hover{
+  background:rgba(102, 126, 234, 0.4);
+  transform:translateY(-2px);
+  box-shadow:0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.chat-input-container{
+  padding:20px;
+  background:rgba(15, 23, 42, 0.95);
+  backdrop-filter:blur(20px);
+  border-top:1px solid rgba(255, 255, 255, 0.1);
+  display:flex;
+  gap:12px;
+  align-items:center;
+}
+
+.input-wrapper{
+  flex:1;
+  position:relative;
+}
+
+.chat-input{
+  width:100%;
+  padding:14px 48px 14px 18px;
+  background:rgba(255, 255, 255, 0.1);
+  backdrop-filter:blur(10px);
+  border:1px solid rgba(255, 255, 255, 0.2);
+  border-radius:25px;
+  color:white;
+  font-size:14px;
+  outline:none;
+  transition:all 0.3s ease;
+}
+
+.chat-input::placeholder{
+  color:rgba(255, 255, 255, 0.5);
+}
+
+.chat-input:focus{
+  border-color:rgba(102, 126, 234, 0.6);
+  box-shadow:0 0 20px rgba(102, 126, 234, 0.3);
+}
+
+.attach-btn{
+  position:absolute;
+  right:12px;
+  top:50%;
+  transform:translateY(-50%);
+  background:transparent;
+  border:none;
+  color:rgba(255, 255, 255, 0.6);
+  cursor:pointer;
+  font-size:18px;
+  transition:all 0.3s ease;
+}
+
+.attach-btn:hover{
+  color:rgba(102, 126, 234, 1);
+  transform:translateY(-50%) scale(1.1);
+}
+
+.send-btn{
+  width:48px;
+  height:48px;
+  background:linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border:none;
+  border-radius:50%;
+  color:white;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  transition:all 0.3s ease;
+  box-shadow:0 4px 15px rgba(102, 126, 234, 0.4);
+  font-size:18px;
+}
+
+.send-btn:hover:not(:disabled){
+  transform:scale(1.1) rotate(15deg);
+  box-shadow:0 6px 20px rgba(102, 126, 234, 0.6);
+}
+
+.send-btn:disabled{
+  opacity:0.5;
+  cursor:not-allowed;
+}
+
+.send-btn:active:not(:disabled){
+  transform:scale(0.95);
+}
+
 @media(max-width:900px){
   .navbar ul{
     flex-wrap:wrap;
@@ -275,6 +717,21 @@ body{
   }
   .hero h1{font-size:30px;}
   .about{padding:60px 25px;}
+  .chatbot-container{
+    width:95%;
+    height:90vh;
+    right:2.5%;
+    bottom:10px;
+  }
+  .chatbot-toggle{
+    bottom:20px;
+    right:20px;
+    width:60px;
+    height:60px;
+  }
+  .chatbot-toggle i{
+    font-size:24px;
+  }
 }
 </style>
 </head>
@@ -288,13 +745,10 @@ body{
   </div>
 
   <div class="top-icons">
-
-    <!-- SIGN IN -->
     <div class="signin-dropdown">
       <a class="signin-btn">
         <i class="fa-solid fa-user-lock"></i> Sign In
       </a>
-
       <div class="signin-menu">
         <a href="/login?role=ADMIN"><i class="fa-solid fa-user-shield"></i> Admin</a>
         <a href="/login?role=DOCTOR"><i class="fa-solid fa-user-doctor"></i> Doctor</a>
@@ -302,18 +756,15 @@ body{
       </div>
     </div>
 
-    <!-- ✅ ADDED: PATIENT REGISTRATION -->
-   <a th:href="@{/patient/register}">
-    <i class="fa-solid fa-user-plus"></i> Patient Registration
-</a>
-
+    <a href="/patient/register">
+      <i class="fa-solid fa-user-plus"></i> Patient Registration
+    </a>
 
     <a href="mailto:info@skycare.com"><i class="fa-solid fa-envelope"></i></a>
     <a href="tel:+918836699999"><i class="fa-solid fa-phone"></i></a>
     <a href="https://www.linkedin.com/company/skycyriss-technologies" target="_blank">
       <i class="fa-brands fa-linkedin-in"></i>
     </a>
-
   </div>
 </div>
 
@@ -321,11 +772,8 @@ body{
 <div class="navbar">
   <ul>
     <li><a href="#">Discover SkyCare</a></li>
-
-        <!-- ✅ FIND HOSPITAL (ONLY THIS PART CHANGED) -->
     <li>
       <a href="javascript:void(0)">Find Hospital</a>
-
       <div class="nav-dropdown">
         <a href="https://www.google.com/maps/search/?api=1&query=Hyderabad" target="_blank">Hyderabad</a>
         <a href="https://www.google.com/maps/search/?api=1&query=Warangal" target="_blank">Warangal</a>
@@ -344,7 +792,6 @@ body{
         <a href="https://www.google.com/maps/search/?api=1&query=Kakinada" target="_blank">Kakinada</a>
       </div>
     </li>
-
     <li>
       <a href="#">Medical Services</a>
       <div class="nav-dropdown">
@@ -358,7 +805,6 @@ body{
         <a>Pulmonology</a><a>Interventional Radiology</a>
       </div>
     </li>
-
     <li>
       <a href="#">Health Library</a>
       <div class="nav-dropdown">
@@ -407,6 +853,186 @@ body{
 <div class="footer">
   © 2025 SkyCare • Powered by SkyCyriss Technologies
 </div>
+
+<!-- ================= CHATBOT TOGGLE ================= -->
+<div class="chatbot-toggle" id="chatbot-toggle">
+  <i class="fa-solid fa-robot"></i>
+</div>
+
+<!-- ================= FUTURISTIC CHATBOT ================= -->
+<div class="chatbot-container" id="chatbot-container">
+  <div class="chatbot-header">
+    <div class="header-content">
+      <div class="bot-avatar">
+        <i class="fa-solid fa-brain"></i>
+      </div>
+      <div class="header-text">
+        <h3>SkyCare AI Assistant</h3>
+        <p><span class="status-dot"></span>Online</p>
+      </div>
+    </div>
+    <button class="close-btn" id="close-btn">
+      <i class="fa-solid fa-times"></i>
+    </button>
+  </div>
+  
+  <div class="chat-body" id="chat-body">
+    <div class="chat-message bot-message">
+      <div class="bot-icon">
+        <i class="fa-solid fa-robot"></i>
+      </div>
+      <div class="message-content">
+        👋 Welcome to SkyCare! I'm your AI-powered healthcare assistant. How can I help you today?
+      </div>
+    </div>
+    
+    <div class="quick-replies">
+      <button class="quick-reply-btn" onclick="sendQuickReply('Book an appointment')">📅 Book Appointment</button>
+      <button class="quick-reply-btn" onclick="sendQuickReply('Find a doctor')">👨‍⚕️ Find Doctor</button>
+      <button class="quick-reply-btn" onclick="sendQuickReply('Emergency services')">🚨 Emergency</button>
+      <button class="quick-reply-btn" onclick="sendQuickReply('Medical services')">💊 Services</button>
+    </div>
+  </div>
+  
+  <div class="typing-indicator" id="typing-indicator">
+    <div class="bot-icon">
+      <i class="fa-solid fa-robot"></i>
+    </div>
+    <div class="typing-dots">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+  
+  <div class="chat-input-container">
+    <div class="input-wrapper">
+      <input 
+        type="text" 
+        id="chat-input" 
+        class="chat-input" 
+        placeholder="Type your message..."
+      />
+      <button class="attach-btn">
+        <i class="fa-solid fa-paperclip"></i>
+      </button>
+    </div>
+    <button id="send-btn" class="send-btn">
+      <i class="fa-solid fa-paper-plane"></i>
+    </button>
+  </div>
+</div>
+
+<script>
+const chatInput = document.getElementById("chat-input");
+const chatBody = document.getElementById("chat-body");
+const sendBtn = document.getElementById("send-btn");
+const typingIndicator = document.getElementById("typing-indicator");
+const chatbotToggle = document.getElementById("chatbot-toggle");
+const chatbotContainer = document.getElementById("chatbot-container");
+const closeBtn = document.getElementById("close-btn");
+
+// Toggle chatbot
+chatbotToggle.addEventListener("click", () => {
+  chatbotContainer.classList.add("active");
+  chatbotToggle.style.display = "none";
+  chatInput.focus();
+});
+
+closeBtn.addEventListener("click", () => {
+  chatbotContainer.classList.remove("active");
+  setTimeout(() => {
+    chatbotToggle.style.display = "flex";
+  }, 300);
+});
+
+// Send message on Enter key
+chatInput.addEventListener("keydown", function (e) {
+  if (e.key === "Enter" && !e.shiftKey) {
+    e.preventDefault();
+    sendMessage();
+  }
+});
+
+// Send message on button click
+sendBtn.addEventListener("click", sendMessage);
+
+async function sendMessage() {
+  const msg = chatInput.value.trim();
+  if (!msg) return;
+
+  addMessage(msg, 'user');
+  chatInput.value = "";
+  
+  chatInput.disabled = true;
+  sendBtn.disabled = true;
+  typingIndicator.classList.add('active');
+
+  try {
+    const response = await fetch("/api/chat", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ message: msg })
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const text = await response.text();
+    let reply;
+
+    try {
+      const data = JSON.parse(text);
+      reply = data.reply;
+    } catch {
+      reply = text;
+    }
+
+    typingIndicator.classList.remove('active');
+    addMessage(reply || "I couldn't process that. Please try again.", 'bot');
+  } catch (err) {
+    console.error("Chatbot Error:", err);
+    typingIndicator.classList.remove('active');
+    addMessage("⚠️ Sorry, I'm experiencing connectivity issues. Please try again.", 'bot');
+  } finally {
+    chatInput.disabled = false;
+    sendBtn.disabled = false;
+    chatInput.focus();
+  }
+}
+
+function addMessage(text, type) {
+  const messageDiv = document.createElement('div');
+  messageDiv.className = `chat-message ${type}-message`;
+  
+  if (type === 'bot') {
+    const botIcon = document.createElement('div');
+    botIcon.className = 'bot-icon';
+    botIcon.innerHTML = '<i class="fa-solid fa-robot"></i>';
+    
+    const messageContent = document.createElement('div');
+    messageContent.className = 'message-content';
+    messageContent.textContent = text;
+    
+    messageDiv.appendChild(botIcon);
+    messageDiv.appendChild(messageContent);
+  } else {
+    const messageContent = document.createElement('div');
+    messageContent.className = 'message-content';
+    messageContent.textContent = text;
+    messageDiv.appendChild(messageContent);
+  }
+  
+  chatBody.appendChild(messageDiv);
+  chatBody.scrollTop = chatBody.scrollHeight;
+}
+
+function sendQuickReply(message) {
+  chatInput.value = message;
+  sendMessage();
+}
+</script>
 
 </body>
 </html>

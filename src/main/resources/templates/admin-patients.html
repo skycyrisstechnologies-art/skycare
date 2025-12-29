@@ -15,14 +15,16 @@
   --ink:#0a2540;
 }
 
+/* RESET */
 *{
   margin:0;
   padding:0;
   box-sizing:border-box;
-  font-family:"Inter","Segoe UI",system-ui,sans-serif;
+  font-family:Inter,Segoe UI,system-ui,sans-serif;
 }
 
 body{
+  min-height:100vh;
   background:
     radial-gradient(circle at 50% 35%,
       #ffffff 0%,
@@ -30,57 +32,56 @@ body{
       var(--bg2) 55%,
       var(--bg3) 100%);
   color:var(--ink);
+  overflow-x:hidden;
 }
 
-/* BACKGROUND ANIMATION */
+/* ===== BACKGROUND ANIMATION ===== */
 #ambient{
   position:fixed;
   inset:0;
-  pointer-events:none;
   z-index:0;
+  pointer-events:none;
 }
 
-/* SIDEBAR */
+/* ===== SIDEBAR ===== */
 .sidebar{
   position:fixed;
   top:30px;
   left:30px;
   bottom:30px;
-  width:280px;
+  width:260px;
   background:linear-gradient(180deg,var(--nav-dark),var(--nav-deep));
-  border-radius:28px;
-  padding:36px 26px;
+  border-radius:26px;
+  padding:32px 22px;
   color:white;
   z-index:5;
 }
 
 .sidebar h2{
   text-align:center;
-  margin-bottom:40px;
+  margin-bottom:36px;
 }
 
 .sidebar a{
   display:flex;
   align-items:center;
-  gap:14px;
-  padding:16px 20px;
-  margin-bottom:14px;
-  border-radius:16px;
-  color:#d7ecff;
+  gap:12px;
+  padding:14px 18px;
+  margin-bottom:12px;
+  border-radius:14px;
+  color:#d9ecff;
   text-decoration:none;
-  font-size:16px;
 }
 
 .sidebar a.active,
 .sidebar a:hover{
-  background:rgba(255,255,255,0.18);
-  color:white;
+  background:rgba(255,255,255,.18);
 }
 
-/* MAIN */
+/* ===== MAIN ===== */
 .main{
-  margin-left:360px;
-  padding:55px 80px;
+  margin-left:320px;
+  padding:60px 80px;
   position:relative;
   z-index:5;
 }
@@ -90,7 +91,7 @@ body{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  margin-bottom:30px;
+  margin-bottom:28px;
 }
 
 .header h1{
@@ -101,28 +102,31 @@ body{
   color:#4c6f86;
 }
 
-/* ACTION BUTTONS */
+/* HEADER ACTIONS */
 .header-actions{
   display:flex;
-  gap:14px;
+  gap:20px;
 }
 
-.action-btn{
+.btn{
   padding:12px 22px;
   border-radius:18px;
   border:none;
-  cursor:pointer;
   font-weight:600;
+  cursor:pointer;
+  text-decoration:none;
 }
 
-.back{ background:#fff; }
-.filter{ background:#fff; }
-.add{ background:linear-gradient(135deg,#6fd3ff,#3b82c4); color:white; }
+.btn.white{ background:white; color:#0a2540; }
+.btn.blue{
+  background:linear-gradient(135deg,#6fd3ff,#3b82c4);
+  color:white;
+}
 
-/* FILTER INPUT */
+/* SEARCH */
 #filterBox{
   display:none;
-  margin-bottom:20px;
+  margin:20px 0;
 }
 
 #filterInput{
@@ -130,106 +134,67 @@ body{
   padding:14px 18px;
   border-radius:18px;
   border:none;
-  box-shadow:0 10px 30px rgba(0,0,0,.15);
   font-size:15px;
+  box-shadow:0 10px 30px rgba(0,0,0,.15);
 }
 
-/* PANEL */
+/* ===== PANEL ===== */
 .panel{
-  padding:40px;
+  background:rgba(255,255,255,.65);
+  backdrop-filter:blur(26px);
   border-radius:36px;
-  background:rgba(255,255,255,0.6);
-  backdrop-filter:blur(30px);
+  padding:34px;
 }
 
-/* GRID — FIXED ALIGNMENT */
+/* ===== GRID ===== */
 .grid-header,
 .grid-row{
   display:grid;
   grid-template-columns:
-    1.6fr   /* Name */
-    0.6fr   /* Age */
-    0.8fr   /* Gender */
-    1.4fr   /* Phone */
-    1.2fr   /* Disease */
-    1fr     /* Doctor */
-    1fr     /* Date */
-    1.2fr;  /* Actions */
+    2fr
+    0.6fr
+    0.8fr
+    1.2fr
+    1fr
+    1fr
+    200px; /* ACTIONS FIXED */
   align-items:center;
-  gap:16px;
+  column-gap:16px;
 }
 
 .grid-header{
-  padding:0 20px 18px;
+  padding:0 20px 16px;
   font-weight:600;
   color:#5c7d94;
 }
 
 .grid-row{
   background:white;
-  border-radius:26px;
+  border-radius:24px;
   padding:22px 20px;
-  margin-bottom:20px;
-  box-shadow:0 18px 40px rgba(0,0,0,.12);
+  margin-bottom:18px;
+  box-shadow:0 14px 30px rgba(0,0,0,.12);
 }
 
 /* ACTIONS */
 .actions{
   display:flex;
-  gap:10px;
+  gap:12px;
+  justify-content:flex-end;
 }
 
-.edit{
-  background:#4fc3ff;
-  color:white;
-  padding:10px 18px;
+.actions a{
+  min-width:84px;
+  padding:10px 0;
+  text-align:center;
   border-radius:16px;
-  text-decoration:none;
   font-weight:600;
-}
-
-.delete{
-  background:#ff5c5c;
   color:white;
-  padding:10px 18px;
-  border-radius:16px;
   text-decoration:none;
-  font-weight:600;
-}
-/*BACK BUTTON */
-.back-btn{
-  border:none;
-  padding:10px 22px;
-  border-radius:18px;
-  font-size:14px;
-  font-weight:600;
-  color:#0a2540;
-  cursor:pointer;
-  background:linear-gradient(180deg,rgba(255,255,255,.95),rgba(255,255,255,.65));
-  backdrop-filter:blur(18px);
-  box-shadow:
-    0 14px 36px rgba(11,63,143,.25),
-    inset 0 0 0 1px rgba(255,255,255,.7);
-  transition:.3s ease;
 }
 
-.back-btn:hover{
-  transform:translateY(-2px);
-  box-shadow:
-    0 26px 60px rgba(11,63,143,.35),
-    inset 0 0 0 1px rgba(255,255,255,.85);
-}
-
-.back-btn {
-    text-decoration: none;
-    color: #0d6efd;
-    font-weight: 500;
-}
-
-.back-btn:hover {
-    text-decoration: none;   /* double-safety */
-    color: #084298;
-}
+.edit{ background:#4fc3ff; }
+.delete{ background:#ff5c5c; }
 </style>
 </head>
 
@@ -255,37 +220,40 @@ body{
       <h1>Patients</h1>
       <span>Patient registry & assignments</span>
     </div>
-
     <div class="header-actions">
-      <a href="/admin/dashboard" class="back-btn">← Back</a>
-      <button class="action-btn filter" onclick="toggleFilter()">🔍 Filter</button>
-      <a class="action-btn add" th:href="@{/admin/patients/add}">+ Add Patient</a>
+      <a href="/admin/dashboard" class="btn white">← Back</a>
+      <button class="btn white" onclick="toggleFilter()">🔍 Search</button>
+      <a th:href="@{/admin/patients/add}" class="btn blue">+ Add Patient</a>
     </div>
   </div>
 
-  <!-- FILTER -->
   <div id="filterBox">
-    <input id="filterInput" placeholder="Filter by anything..." onkeyup="filterPatients()"/>
+    <input id="filterInput" placeholder="Search..." onkeyup="filterPatients()">
   </div>
 
   <div class="panel">
 
     <div class="grid-header">
-      <div>Name</div><div>Age</div><div>Gender</div><div>Phone</div>
-      <div>Disease</div><div>Doctor</div><div>Date</div><div></div>
+      <div>Name</div>
+      <div>Age</div>
+      <div>Gender</div>
+      <div>Disease</div>
+      <div>Doctor</div>
+      <div>Date</div>
+      <div>Actions</div>
     </div>
 
     <div class="grid-row" th:each="p : ${patients}">
       <div th:text="${p.name}"></div>
       <div th:text="${p.age}"></div>
       <div th:text="${p.gender}"></div>
-      <div th:text="${p.phone}"></div>
       <div th:text="${p.disease}"></div>
       <div th:text="${p.assignedDoctorCode}"></div>
       <div th:text="${#temporals.format(p.createdDate,'dd-MM-yyyy')}"></div>
       <div class="actions">
         <a class="edit" th:href="@{'/admin/patients/edit/' + ${p.id}}">Edit</a>
-        <a class="delete" th:href="@{'/admin/patients/delete/' + ${p.id}}"
+        <a class="delete"
+           th:href="@{'/admin/patients/delete/' + ${p.id}}"
            onclick="return confirm('Delete patient?')">Delete</a>
       </div>
     </div>
@@ -293,7 +261,7 @@ body{
   </div>
 </div>
 
-<!-- ANIMATION (UNCHANGED) -->
+<!-- ===== BACKGROUND DOTS JS ===== -->
 <script>
 const c=document.getElementById("ambient"),ctx=c.getContext("2d");
 function resize(){c.width=innerWidth;c.height=innerHeight}
@@ -310,7 +278,8 @@ const dots=[...Array(140)].map(()=>({
 (function anim(){
   ctx.clearRect(0,0,c.width,c.height);
   dots.forEach(d=>{
-    d.y-=d.v; if(d.y<0)d.y=c.height;
+    d.y-=d.v;
+    if(d.y<0)d.y=c.height;
     ctx.beginPath();
     ctx.arc(d.x,d.y,d.r,0,Math.PI*2);
     ctx.fillStyle=`rgba(140,210,255,${d.o})`;
@@ -320,7 +289,7 @@ const dots=[...Array(140)].map(()=>({
 })();
 </script>
 
-<!-- FILTER SCRIPT -->
+<!-- ===== SEARCH JS ===== -->
 <script>
 function toggleFilter(){
   const f=document.getElementById("filterBox");
@@ -332,29 +301,6 @@ function filterPatients(){
     r.style.display=r.innerText.toLowerCase().includes(v)?"grid":"none";
   });
 }
-</script>
-
-<script>
-(function () {
-  let navigatedBack = false;
-
-  window.addEventListener("pageshow", function (event) {
-    if (event.persisted) {
-      navigator.sendBeacon("/kill-session");
-      window.location.replace("/login?expired");
-    }
-  });
-
-  window.addEventListener("popstate", function () {
-    navigatedBack = true;
-  });
-
-  window.addEventListener("beforeunload", function () {
-    if (navigatedBack) {
-      navigator.sendBeacon("/kill-session");
-    }
-  });
-})();
 </script>
 
 </body>

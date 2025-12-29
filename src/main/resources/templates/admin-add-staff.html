@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Add Staff</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+<style>
+:root{
+  --nav-dark:#0b3f8f;
+  --nav-deep:#072f66;
+  --bg1:#f7fbff;
+  --bg2:#d6ecfb;
+  --bg3:#a8d6f5;
+  --ink:#0a2540;
+}
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:Inter,Segoe UI,system-ui,sans-serif;
+}
+
+body{
+  min-height:100vh;
+  background:
+    radial-gradient(circle at 50% 35%,
+      #ffffff 0%,
+      var(--bg1) 30%,
+      var(--bg2) 55%,
+      var(--bg3) 100%);
+  overflow-x:hidden;
+  color:var(--ink);
+}
+
+/* BACKGROUND */
+#ambient{
+  position:fixed;
+  inset:0;
+  z-index:0;
+  pointer-events:none;
+}
+
+/* SIDEBAR */
+.sidebar{
+  position:fixed;
+  top:30px;
+  left:30px;
+  bottom:30px;
+  width:280px;
+  background:linear-gradient(180deg,var(--nav-dark),var(--nav-deep));
+  border-radius:28px;
+  padding:36px 26px;
+  color:white;
+  z-index:5;
+}
+
+.sidebar h2{
+  text-align:center;
+  margin-bottom:40px;
+}
+
+.sidebar a{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:14px 18px;
+  margin-bottom:12px;
+  border-radius:14px;
+  color:#d9ecff;
+  text-decoration:none;
+}
+
+.sidebar a:hover{
+  background:rgba(255,255,255,.18);
+}
+
+/* MAIN */
+.content{
+  margin-left:360px;
+  padding:50px 60px;
+  position:relative;
+  z-index:5;
+}
+
+/* HEADER */
+.header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:10px;
+}
+
+h1{
+  font-size:40px;
+}
+
+.sub{
+  color:#4e7aa0;
+  margin-bottom:30px;
+}
+
+/* BACK BUTTON */
+.back-btn{
+  text-decoration:none;
+  padding:10px 22px;
+  border-radius:18px;
+  background:white;
+  color:#0a2540;
+  font-weight:600;
+}
+
+/* FORM CARD */
+.card{
+  background:rgba(255,255,255,.75);
+  backdrop-filter:blur(22px);
+  border-radius:30px;
+  padding:40px;
+  max-width:600px;
+  box-shadow:0 30px 80px rgba(0,0,0,.15);
+}
+
+/* FORM */
+.form-group{
+  margin-bottom:20px;
+}
+
+label{
+  display:block;
+  font-weight:600;
+  margin-bottom:6px;
+}
+
+input, select{
+  width:100%;
+  padding:12px 14px;
+  border-radius:12px;
+  border:1px solid #cddfee;
+  font-size:14px;
+}
+
+input:focus, select:focus{
+  outline:none;
+  border-color:#3b82c4;
+}
+
+/* ACTIONS */
+.actions{
+  display:flex;
+  gap:14px;
+  margin-top:30px;
+}
+
+.save-btn{
+  background:linear-gradient(135deg,#6fd3ff,#3b82c4);
+  color:white;
+  padding:12px 28px;
+  border-radius:16px;
+  border:none;
+  font-weight:600;
+  cursor:pointer;
+}
+
+.cancel-btn{
+  text-decoration:none;
+  padding:12px 28px;
+  border-radius:16px;
+  background:#e5eef7;
+  color:#0a2540;
+  font-weight:600;
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="ambient"></canvas>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <h2>Admin Portal</h2>
+  <a href="/admin/dashboard">🏠 Dashboard</a>
+  <a href="/admin/doctors">🧑‍⚕️ Manage Doctors</a>
+  <a href="/admin/staff">👨‍💼 Manage Staff</a>
+  <a href="/logout">🚪 Logout</a>
+</div>
+
+<!-- CONTENT -->
+<div class="content">
+
+  <div class="header">
+    <h1>Add Staff</h1>
+    <a href="/admin/staff" class="back-btn">← Back</a>
+  </div>
+
+  <div class="sub">Register new hospital staff</div>
+
+  <div class="card">
+
+    <form method="post" action="/admin/staff/add">
+
+      <div class="form-group">
+        <label>Staff Code</label>
+        <input type="text" name="staffCode" placeholder="STF-006" required>
+      </div>
+
+      <div class="form-group">
+        <label>Full Name</label>
+        <input type="text" name="name" placeholder="Enter staff name" required>
+      </div>
+
+      <div class="form-group">
+        <label>Role</label>
+        <input type="text" name="role" placeholder="Nurse / Receptionist" required>
+      </div>
+
+      <div class="form-group">
+        <label>Department</label>
+        <input type="text" name="department" placeholder="Emergency / Front Desk" required>
+      </div>
+
+      <div class="form-group">
+        <label>Status</label>
+        <select name="status">
+          <option value="ACTIVE">ACTIVE</option>
+          <option value="INACTIVE">INACTIVE</option>
+        </select>
+      </div>
+
+      <div class="actions">
+        <button class="save-btn" type="submit">Save Staff</button>
+        <a href="/admin/staff" class="cancel-btn">Cancel</a>
+      </div>
+
+    </form>
+
+  </div>
+</div>
+
+<script>
+const c=document.getElementById("ambient"),ctx=c.getContext("2d");
+function resize(){c.width=innerWidth;c.height=innerHeight}
+resize();onresize=resize;
+
+const dots=[...Array(120)].map(() => ({
+  x:Math.random()*c.width,
+  y:Math.random()*c.height,
+  r:Math.random()*2+1,
+  v:Math.random()*0.35+0.15
+}));
+
+(function animate(){
+  ctx.clearRect(0,0,c.width,c.height);
+  dots.forEach(d=>{
+    d.y-=d.v;
+    if(d.y<0)d.y=c.height;
+    ctx.beginPath();
+    ctx.arc(d.x,d.y,d.r,0,Math.PI*2);
+    ctx.fillStyle="rgba(143,211,255,0.35)";
+    ctx.fill();
+  });
+  requestAnimationFrame(animate);
+})();
+</script>
+
+</body>
+</html>

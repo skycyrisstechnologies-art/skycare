@@ -283,7 +283,10 @@ tbody tr td:last-child{border-radius:0 18px 18px 0;}
   <h2>Doctor Portal</h2>
   <div class="nav">
     <a class="active"><i class="bi bi-speedometer2"></i> Dashboard</a>
-    <a th:href="@{/doctor/patients}"><i class="bi bi-people"></i> Patients</a>
+    <a th:href="@{/doctor/staff}">
+  <i class="bi bi-person-badge"></i> Staff
+</a>
+
     <a th:href="@{/logout}"><i class="bi bi-box-arrow-right"></i> Logout</a>
   </div>
 </div>
@@ -327,7 +330,7 @@ tbody tr td:last-child{border-radius:0 18px 18px 0;}
     <div class="panel-header">
       <h3>Assigned Patients</h3>
       <div class="search">
-        <i class="bi bi-funnel-fill"></i>
+        <i class="bi bi-search"></i>
         <input placeholder="Search patient..." onkeyup="filterPatients()" id="patientSearch">
       </div>
     </div>

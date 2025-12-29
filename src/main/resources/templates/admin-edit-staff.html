@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Edit Staff</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+<style>
+body{
+  font-family:Segoe UI,system-ui,sans-serif;
+  background:#f4f7fb;
+  margin:0;
+}
+
+.container{
+  max-width:600px;
+  margin:60px auto;
+  background:white;
+  padding:30px;
+  border-radius:14px;
+  box-shadow:0 20px 50px rgba(0,0,0,.12);
+}
+
+h1{
+  margin-bottom:20px;
+}
+
+label{
+  font-weight:600;
+  display:block;
+  margin-top:14px;
+}
+
+input, select{
+  width:100%;
+  padding:10px;
+  margin-top:6px;
+  border-radius:8px;
+  border:1px solid #ccc;
+}
+
+.actions{
+  margin-top:25px;
+  display:flex;
+  gap:12px;
+}
+
+button{
+  padding:10px 20px;
+  border:none;
+  border-radius:10px;
+  background:#0b3f8f;
+  color:white;
+  cursor:pointer;
+}
+
+a{
+  padding:10px 20px;
+  border-radius:10px;
+  background:#e5eaf2;
+  text-decoration:none;
+  color:#333;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <h1>Edit Staff</h1>
+
+  <!-- staff attribute MUST exist -->
+  <form method="post" th:action="@{'/admin/staff/update/' + ${staff.id}}">
+
+    <input type="hidden" name="id" th:value="${staff.id}"/>
+
+    <label>Staff Code</label>
+    <input type="text" name="staffCode" th:value="${staff.staffCode}" readonly>
+
+    <label>Name</label>
+    <input type="text" name="name" th:value="${staff.name}" required>
+
+    <label>Role</label>
+    <input type="text" name="role" th:value="${staff.role}" required>
+
+    <label>Department</label>
+    <input type="text" name="department" th:value="${staff.department}" required>
+
+    <label>Status</label>
+    <select name="status">
+      <option value="ACTIVE" th:selected="${staff.status == 'ACTIVE'}">ACTIVE</option>
+      <option value="INACTIVE" th:selected="${staff.status == 'INACTIVE'}">INACTIVE</option>
+    </select>
+
+    <div class="actions">
+      <button type="submit">Update</button>
+      <a href="/admin/staff">Cancel</a>
+    </div>
+
+  </form>
+
+</div>
+
+</body>
+</html>

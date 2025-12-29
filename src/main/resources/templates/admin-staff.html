@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
-<title>Manage Doctors</title>
+<title>Manage Staff</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
 <style>
@@ -15,7 +15,6 @@
   --bg2:#d6ecfb;
   --bg3:#a8d6f5;
   --ink:#0a2540;
-  --stroke:rgba(255,255,255,0.45);
 }
 
 *{
@@ -119,13 +118,11 @@ h1{
     0 14px 36px rgba(11,63,143,.25),
     inset 0 0 0 1px rgba(255,255,255,.7);
   transition:.3s ease;
+  text-decoration:none;
 }
 
 .back-btn:hover{
   transform:translateY(-2px);
-  box-shadow:
-    0 26px 60px rgba(11,63,143,.35),
-    inset 0 0 0 1px rgba(255,255,255,.85);
 }
 
 /* TOP BAR */
@@ -157,11 +154,11 @@ h1{
 .row-card{
   display:grid;
   grid-template-columns:
-    0.9fr
     1fr
-    1.4fr
     1.2fr
-    0.9fr
+    1.2fr
+    1.2fr
+    1fr
     1fr;
   align-items:center;
   column-gap:12px;
@@ -204,17 +201,6 @@ h1{
   text-decoration:none;
   font-size:14px;
 }
-
-.back-btn {
-    text-decoration: none;
-    color: #0d6efd;
-    font-weight: 500;
-}
-
-.back-btn:hover {
-    text-decoration: none;
-    color: #084298;
-}
 </style>
 </head>
 
@@ -226,11 +212,9 @@ h1{
 <div class="sidebar">
   <h2>Admin Portal</h2>
   <a th:href="@{/admin/dashboard}">🏠 Dashboard</a>
-  <a class="active">🧑‍⚕️ Manage Doctors</a>
-  <a th:href="@{/admin/staff}">👨‍💼 Manage Staff</a>
+  <a th:href="@{/admin/doctors}">🧑‍⚕️ Manage Doctors</a>
+  <a class="active">👨‍💼 Manage Staff</a>
   <a th:href="@{/admin/patients}">🧍 Patients</a>
-  <a th:href="@{/admin/billing}">💳 Billing</a>
-  <a th:href="@{/admin/analytics}">📊 Analytics</a>
   <a th:href="@{/logout}">🚪 Logout</a>
 </div>
 
@@ -238,16 +222,14 @@ h1{
 <div class="content">
 
   <div class="header">
-    <h1>Manage Doctors</h1>
-    <div class="header-actions">
-      <a href="/admin/dashboard" class="back-btn">← Back</a>
-    </div>
+    <h1>Manage Staff</h1>
+    <a href="/admin/dashboard" class="back-btn">← Back</a>
   </div>
 
-  <div class="sub">Doctor registry & access control</div>
+  <div class="sub">Staff registry & access control</div>
 
   <div class="top-bar">
-    <a class="add-btn" th:href="@{/admin/doctors/add}">+ Add Doctor</a>
+    <a class="add-btn" th:href="@{/admin/staff/add}">+ Add Staff</a>
   </div>
 
   <div class="panel">
@@ -255,22 +237,22 @@ h1{
     <div class="grid-head">
       <div>Code</div>
       <div>Name</div>
-      <div>Specialization</div>
-      <div>Wing</div>
+      <div>Role</div>
+      <div>Department</div>
       <div>Status</div>
       <div>Actions</div>
     </div>
 
-    <div class="row-card" th:each="d : ${doctors}">
-      <div th:text="${d.doctorCode}">DOC-002</div>
-      <div th:text="${d.name}">Ajay</div>
-      <div th:text="${d.specialization}">AIMS, Delhi</div>
-      <div th:text="${d.wing}">Cardiology</div>
-      <div th:text="${d.status}">ACTIVE</div>
+    <div class="row-card" th:each="s : ${staff}">
+      <div th:text="${s.staffCode}">STF-001</div>
+      <div th:text="${s.name}">Rajesh Kumar</div>
+      <div th:text="${s.role}">Nurse</div>
+      <div th:text="${s.department}">Emergency</div>
+      <div th:text="${s.status}">ACTIVE</div>
       <div class="actions">
-        <a class="edit" th:href="@{'/admin/doctors/edit/' + ${d.id}}">Edit</a>
+        <a class="edit" th:href="@{'/admin/staff/edit/' + ${s.id}}">Edit</a>
         <a class="delete"
-           th:href="@{'/admin/doctors/delete/' + ${d.id}}"
+           th:href="@{'/admin/staff/delete/' + ${s.id}}"
            onclick="return confirm('Are you sure?')">Delete</a>
       </div>
     </div>
@@ -301,43 +283,6 @@ const dots=[...Array(140)].map(() => ({
     ctx.fill();
   });
   requestAnimationFrame(animate);
-})();
-</script>
-
-<script>
-document.addEventListener("contextmenu", e => e.preventDefault());
-
-document.addEventListener("keydown", e => {
-  if (
-    e.key === "F12" ||
-    (e.ctrlKey && e.shiftKey && ["I","J","C"].includes(e.key)) ||
-    (e.ctrlKey && e.key === "U")
-  ) {
-    e.preventDefault();
-  }
-});
-</script>
-
-<script>
-(function () {
-  let navigatedBack = false;
-
-  window.addEventListener("pageshow", function (event) {
-    if (event.persisted) {
-      navigator.sendBeacon("/kill-session");
-      window.location.replace("/login?expired");
-    }
-  });
-
-  window.addEventListener("popstate", function () {
-    navigatedBack = true;
-  });
-
-  window.addEventListener("beforeunload", function () {
-    if (navigatedBack) {
-      navigator.sendBeacon("/kill-session");
-    }
-  });
 })();
 </script>
 
