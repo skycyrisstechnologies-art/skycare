@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Billing</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+<style>
+:root{
+  --sky:#eaf6ff;
+  --light:#bfe7ff;
+  --mid:#6fb6e8;
+  --deep:#1f4f73;
+  --ink:#0b2a3d;
+
+  --glass1:rgba(255,255,255,.55);
+  --glass2:rgba(255,255,255,.25);
+  --stroke:rgba(255,255,255,.45);
+  --accent:#4fc3ff;
+}
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:"Inter","Segoe UI",system-ui,sans-serif;
+}
+
+body{
+  height:100vh;
+  overflow:hidden;
+  background:
+    radial-gradient(circle at 50% 38%,
+      #ffffff 0%,
+      var(--sky) 28%,
+      var(--light) 48%,
+      var(--mid) 72%,
+      var(--deep) 100%);
+  color:var(--ink);
+}
+
+canvas{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+}
+
+/* ===== SIDEBAR ===== */
+.sidebar{
+  position:fixed;
+  top:30px;
+  left:30px;
+  bottom:30px;
+  width:280px;
+  background:linear-gradient(180deg,rgba(15,82,153,.9),rgba(11,53,88,.95));
+  backdrop-filter:blur(26px);
+  border-radius:28px;
+  padding:36px 26px;
+  color:white;
+}
+
+.sidebar h2{
+  font-size:22px;
+  font-weight:700;
+  margin-bottom:40px;
+  text-align:center;
+}
+
+.sidebar a{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  padding:16px 20px;
+  margin-bottom:14px;
+  border-radius:16px;
+  text-decoration:none;
+  color:#d7ecff;
+  font-weight:500;
+}
+
+.sidebar a.active,
+.sidebar a:hover{
+  background:rgba(255,255,255,.18);
+  color:#fff;
+}
+
+/* ===== MAIN ===== */
+.main{
+  margin-left:360px;
+  padding:50px 70px;
+  height:100vh;
+  overflow:hidden;
+}
+
+/* ===== HEADER ===== */
+.header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:40px;
+}
+
+.header h1{
+  font-size:42px;
+}
+
+.header span{
+  color:#5c7d94;
+}
+
+.back-btn{
+  padding:12px 22px;
+  border-radius:18px;
+  border:none;
+  cursor:pointer;
+  font-weight:600;
+  background:white;
+  color:#0b2a3d;
+}
+
+/* ===== BILL PANEL ===== */
+.panel{
+  border-radius:36px;
+  padding:40px;
+  background:linear-gradient(180deg,var(--glass1),var(--glass2));
+  backdrop-filter:blur(30px);
+  box-shadow:
+    0 80px 180px rgba(31,79,115,.45),
+    inset 0 0 0 1px var(--stroke);
+}
+
+/* ===== GRID ===== */
+.grid-header,
+.grid-row{
+  display:grid;
+  grid-template-columns:
+    1.2fr
+    2fr
+    1.4fr
+    1fr
+    1fr
+    1fr;
+  align-items:center;
+}
+
+.grid-header{
+  padding:0 20px 18px;
+  font-weight:600;
+  color:#5c7d94;
+}
+
+.grid-row{
+  background:white;
+  padding:22px 20px;
+  margin-bottom:18px;
+  border-radius:22px;
+  box-shadow:0 18px 40px rgba(0,0,0,.12);
+}
+
+/* ===== STATUS ===== */
+.status{
+  font-weight:700;
+  text-align:center;
+}
+
+.paid{ color:#16a34a; }
+.pending{ color:#dc2626; }
+
+/* ===== TOTAL ===== */
+.total{
+  margin-top:30px;
+  display:flex;
+  justify-content:flex-end;
+  gap:20px;
+  font-size:18px;
+  font-weight:700;
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="ambient"></canvas>
+
+<!-- ===== SIDEBAR ===== -->
+<div class="sidebar">
+  <h2>Admin Portal</h2>
+  <a href="/admin/dashboard">🏠 Dashboard</a>
+  <a href="/admin/doctors">🧑‍⚕️ Doctors</a>
+  <a href="/admin/patients">🧍 Patients</a>
+  <a class="active">💳 Billing</a>
+  <a href="/logout">🚪 Logout</a>
+</div>
+
+<!-- ===== MAIN ===== -->
+<div class="main">
+
+  <div class="header">
+    <div>
+      <h1>Billing</h1>
+      <span>Invoices & payments</span>
+    </div>
+    <!-- ✅ SAFE BACK BUTTON -->
+    <button class="back-btn" onclick="location.href='/admin/dashboard'">← Back</button>
+  </div>
+
+  <div class="panel">
+
+    <div class="grid-header">
+      <div>Bill ID</div>
+      <div>Patient</div>
+      <div>Service</div>
+      <div>Amount</div>
+      <div>Date</div>
+      <div>Status</div>
+    </div>
+
+    <div class="grid-row">
+      <div>BILL-001</div>
+      <div>Ravi Kumar</div>
+      <div>Consultation</div>
+      <div>₹500</div>
+      <div>30-12-2025</div>
+      <div class="status paid">PAID</div>
+    </div>
+
+    <div class="grid-row">
+      <div>BILL-002</div>
+      <div>Priya Sharma</div>
+      <div>Lab Tests</div>
+      <div>₹1,200</div>
+      <div>30-12-2025</div>
+      <div class="status pending">PENDING</div>
+    </div>
+
+    <div class="grid-row">
+      <div>BILL-003</div>
+      <div>Surya</div>
+      <div>Medication</div>
+      <div>₹800</div>
+      <div>30-12-2025</div>
+      <div class="status paid">PAID</div>
+    </div>
+
+    <div class="total">
+      <div>Total Collected:</div>
+      <div>₹1,300</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ===== BACKGROUND ANIMATION ===== -->
+<script>
+const c=document.getElementById("ambient"),ctx=c.getContext("2d");
+function resize(){c.width=innerWidth;c.height=innerHeight}
+resize();addEventListener("resize",resize);
+
+const dots=[...Array(120)].map(() => ({
+  x:Math.random()*c.width,
+  y:Math.random()*c.height,
+  r:Math.random()*2.2+1,
+  v:Math.random()*0.35+0.1,
+  o:Math.random()*0.4+0.2
+}));
+
+(function anim(){
+  ctx.clearRect(0,0,c.width,c.height);
+  dots.forEach(d=>{
+    d.y-=d.v;
+    if(d.y<0) d.y=c.height;
+    ctx.beginPath();
+    ctx.arc(d.x,d.y,d.r,0,Math.PI*2);
+    ctx.fillStyle=`rgba(255,255,255,${d.o})`;
+    ctx.fill();
+  });
+  requestAnimationFrame(anim);
+})();
+</script>
+
+</body>
+</html>

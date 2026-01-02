@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Analytics</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+<style>
+:root{
+  --sky:#eaf6ff;
+  --light:#bfe7ff;
+  --mid:#6fb6e8;
+  --deep:#1f4f73;
+  --ink:#0b2a3d;
+
+  --glass1:rgba(255,255,255,.55);
+  --glass2:rgba(255,255,255,.25);
+  --stroke:rgba(255,255,255,.45);
+  --accent:#4fc3ff;
+}
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:"Inter","Segoe UI",system-ui,sans-serif;
+}
+
+body{
+  height:100vh;
+  overflow:hidden;
+  background:
+    radial-gradient(circle at 50% 38%,
+      #ffffff 0%,
+      var(--sky) 28%,
+      var(--light) 48%,
+      var(--mid) 72%,
+      var(--deep) 100%);
+  color:var(--ink);
+}
+
+canvas{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+}
+
+/* ===== SIDEBAR ===== */
+.sidebar{
+  position:fixed;
+  top:30px;
+  left:30px;
+  bottom:30px;
+  width:280px;
+  background:linear-gradient(180deg,rgba(15,82,153,.9),rgba(11,53,88,.95));
+  backdrop-filter:blur(26px);
+  border-radius:28px;
+  padding:36px 26px;
+  color:white;
+}
+
+.sidebar h2{
+  font-size:22px;
+  font-weight:700;
+  margin-bottom:40px;
+  text-align:center;
+}
+
+.sidebar a{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  padding:16px 20px;
+  margin-bottom:14px;
+  border-radius:16px;
+  text-decoration:none;
+  color:#d7ecff;
+  font-weight:500;
+}
+
+.sidebar a.active,
+.sidebar a:hover{
+  background:rgba(255,255,255,.18);
+  color:#fff;
+}
+
+/* ===== MAIN ===== */
+.main{
+  margin-left:360px;
+  padding:50px 70px;
+  height:100vh;
+  overflow:auto;
+}
+
+/* ===== HEADER ===== */
+.header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:40px;
+}
+
+.header h1{
+  font-size:42px;
+}
+
+.header span{
+  color:#5c7d94;
+}
+
+.back-btn{
+  padding:12px 22px;
+  border-radius:18px;
+  border:none;
+  cursor:pointer;
+  font-weight:600;
+  background:white;
+}
+
+/* ===== STATS ===== */
+.stats{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:26px;
+  margin-bottom:40px;
+}
+
+.stat-card{
+  background:linear-gradient(180deg,var(--glass1),var(--glass2));
+  backdrop-filter:blur(28px);
+  border-radius:28px;
+  padding:28px;
+  box-shadow:
+    0 40px 120px rgba(31,79,115,.35),
+    inset 0 0 0 1px var(--stroke);
+}
+
+.stat-card h3{
+  font-size:15px;
+  color:#5c7d94;
+  margin-bottom:14px;
+}
+
+.stat-card strong{
+  font-size:36px;
+}
+
+/* ===== PANELS ===== */
+.panel{
+  background:linear-gradient(180deg,var(--glass1),var(--glass2));
+  backdrop-filter:blur(30px);
+  border-radius:36px;
+  padding:36px;
+  box-shadow:
+    0 60px 160px rgba(31,79,115,.45),
+    inset 0 0 0 1px var(--stroke);
+  margin-bottom:40px;
+}
+
+/* ===== SIMPLE CHARTS ===== */
+.chart{
+  height:220px;
+  display:flex;
+  align-items:flex-end;
+  gap:20px;
+}
+
+.bar{
+  flex:1;
+  background:linear-gradient(180deg,#6fd3ff,#3b82c4);
+  border-radius:14px 14px 0 0;
+  display:flex;
+  align-items:flex-end;
+  justify-content:center;
+  color:white;
+  font-weight:700;
+  padding-bottom:10px;
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="ambient"></canvas>
+
+<!-- ===== SIDEBAR ===== -->
+<div class="sidebar">
+  <h2>Admin Portal</h2>
+  <a href="/admin/dashboard">🏠 Dashboard</a>
+  <a href="/admin/doctors">🧑‍⚕️ Doctors</a>
+  <a href="/admin/patients">🧍 Patients</a>
+  <a href="/admin/billing">💳 Billing</a>
+  <a class="active">📊 Analytics</a>
+  <a href="/logout">🚪 Logout</a>
+</div>
+
+<!-- ===== MAIN ===== -->
+<div class="main">
+
+  <div class="header">
+    <div>
+      <h1>Analytics</h1>
+      <span>Hospital insights & statistics</span>
+    </div>
+    <button class="back-btn" onclick="location.href='/admin/dashboard'">← Back</button>
+  </div>
+
+  <!-- ===== STATS ===== -->
+  <div class="stats">
+    <div class="stat-card">
+      <h3>Total Patients</h3>
+      <strong>1,248</strong>
+    </div>
+    <div class="stat-card">
+      <h3>Total Doctors</h3>
+      <strong>48</strong>
+    </div>
+    <div class="stat-card">
+      <h3>Appointments Today</h3>
+      <strong>92</strong>
+    </div>
+    <div class="stat-card">
+      <h3>Total Revenue</h3>
+      <strong>₹4.6L</strong>
+    </div>
+  </div>
+
+  <!-- ===== PATIENT GROWTH ===== -->
+  <div class="panel">
+    <h2 style="margin-bottom:24px">Patient Growth (Last 6 Months)</h2>
+    <div class="chart">
+      <div class="bar" style="height:40%">Jan</div>
+      <div class="bar" style="height:55%">Feb</div>
+      <div class="bar" style="height:65%">Mar</div>
+      <div class="bar" style="height:72%">Apr</div>
+      <div class="bar" style="height:85%">May</div>
+      <div class="bar" style="height:95%">Jun</div>
+    </div>
+  </div>
+
+  <!-- ===== REVENUE ===== -->
+  <div class="panel">
+    <h2 style="margin-bottom:24px">Monthly Revenue</h2>
+    <div class="chart">
+      <div class="bar" style="height:45%">₹55k</div>
+      <div class="bar" style="height:60%">₹72k</div>
+      <div class="bar" style="height:70%">₹88k</div>
+      <div class="bar" style="height:80%">₹1.1L</div>
+      <div class="bar" style="height:90%">₹1.4L</div>
+      <div class="bar" style="height:100%">₹1.6L</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ===== BACKGROUND ANIMATION ===== -->
+<script>
+const c=document.getElementById("ambient"),ctx=c.getContext("2d");
+function resize(){c.width=innerWidth;c.height=innerHeight}
+resize();addEventListener("resize",resize);
+
+const dots=[...Array(120)].map(()=>({
+  x:Math.random()*c.width,
+  y:Math.random()*c.height,
+  r:Math.random()*2.2+1,
+  v:Math.random()*0.35+0.1,
+  o:Math.random()*0.4+0.2
+}));
+
+(function anim(){
+  ctx.clearRect(0,0,c.width,c.height);
+  dots.forEach(d=>{
+    d.y-=d.v;
+    if(d.y<0) d.y=c.height;
+    ctx.beginPath();
+    ctx.arc(d.x,d.y,d.r,0,Math.PI*2);
+    ctx.fillStyle=`rgba(255,255,255,${d.o})`;
+    ctx.fill();
+  });
+  requestAnimationFrame(anim);
+})();
+</script>
+
+</body>
+</html>

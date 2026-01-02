@@ -302,6 +302,33 @@ function filterPatients(){
   });
 }
 </script>
+<script>
+(function () {
+  // Prevent back navigation to login
+  if (window.history && window.history.pushState) {
+    window.history.pushState(null, null, window.location.href);
+    window.addEventListener("popstate", function () {
+      window.location.replace("/");
+    });
+  }
+})();
+</script>
+<script>
+/* ===== SORT PATIENTS BY DATE (ASCENDING) ===== */
+(function sortPatientsByDateAsc(){
+  const panel = document.querySelector(".panel");
+  const rows = Array.from(panel.querySelectorAll(".grid-row"));
+
+  rows.sort((a, b) => {
+    const dateA = a.children[5].innerText.split("-").reverse().join("-");
+    const dateB = b.children[5].innerText.split("-").reverse().join("-");
+    return new Date(dateA) - new Date(dateB);
+  });
+
+  rows.forEach(row => panel.appendChild(row));
+})();
+</script>
+
 
 </body>
 </html>
