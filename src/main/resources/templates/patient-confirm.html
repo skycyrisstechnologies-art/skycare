@@ -1,0 +1,15 @@
+<h2>Final Step: Confirm & Pay</h2>
+
+<p><b>Doctor:</b> <span th:text="${doctor.name}"></span></p>
+<p><b>Service:</b> General Consultation</p>
+
+<hr>
+
+<p>Consultation Fee: ₹<span th:text="${consultationFee}"></span></p>
+<p>Registration Fee: ₹<span th:text="${registrationFee}"></span></p>
+
+<h3>Total: ₹<span th:text="${total}"></span></h3>
+
+<form action="/patient/pay" method="post">
+    <button type="submit">Pay & Join Queue</button>
+</form>

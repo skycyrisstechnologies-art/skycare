@@ -50,6 +50,7 @@ public class SecurityConfig {
                         "/home",
                         "/login",
                         "/api/chat/**",
+                        "/patient/**",
                         "/patient/register",
                         "/css/**",
                         "/js/**",

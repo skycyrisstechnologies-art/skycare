@@ -36,4 +36,11 @@ public class PatientService {
     public void deletePatient(Long id) {
         patientRepository.deleteById(id);
     }
+    // =====================================================
+// ALIAS METHOD – REQUIRED BY PatientRegistrationController
+// =====================================================
+public Patient save(Patient patient) {
+    return savePatient(patient);
+}
+
 }

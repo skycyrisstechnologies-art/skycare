@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Patient Registration</title>
+</head>
+<body>
+
+<h2>Let's Get You Registered</h2>
+
+<form action="/patient/send-otp" method="post">
+    <input type="text" name="phone" placeholder="Mobile Number" required />
+    <button type="submit">Verify via OTP</button>
+</form>
+
+</body>
+</html>

@@ -104,12 +104,16 @@ public class DoctorService {
     // =====================================================
     public List<Patient> getPatientsForLoggedInDoctor() {
         String doctorCode = getDoctorCodeForLoggedIn();
-        return patientRepo.findByAssignedDoctorCode(doctorCode);
+        Doctor doctor = getLoggedInDoctor();
+return patientRepo.findByDoctor(doctor);
+
     }
 
     public long countPatientsForLoggedInDoctor() {
         String doctorCode = getDoctorCodeForLoggedIn();
-        return patientRepo.countByAssignedDoctorCode(doctorCode);
+        Doctor doctor = getLoggedInDoctor();
+return patientRepo.countByDoctor(doctor);
+
     }
 
     // =====================================================
@@ -124,4 +128,15 @@ public class DoctorService {
         // Appointment module not implemented yet
         return List.of();
     }
+    // =====================================================
+// TEMP – ASSIGN DOCTOR DURING PATIENT REGISTRATION
+// =====================================================
+public Doctor findLeastBusyDoctor() {
+    // Temporary logic: return first available doctor
+    return doctorRepo.findAll()
+            .stream()
+            .findFirst()
+            .orElse(null);
+}
+
 }
